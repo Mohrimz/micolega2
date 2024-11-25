@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Category;
 use App\Models\Skill;
@@ -59,6 +60,19 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Proof document status updated successfully.');
     }
+    //view document
+    public function viewDocument($id)
+{
+    $proofDocument = ProofDocument::findOrFail($id);
+
+    // Ensure the document exists
+    if (!Storage::exists($proofDocument->document_path)) {
+        return redirect()->back()->with('error', 'Document not found.');
+    }
+
+    // Return the document for viewing
+    return Storage::response($proofDocument->document_path);
+}
     // Handle the form submission to add a new skill
     public function store(Request $request)
     {

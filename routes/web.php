@@ -89,3 +89,4 @@ Route::put('/teach/session-requests/{id}', [TeachController::class, 'updateSessi
     Route::get('/students/{skillId}', [TeachController::class, 'getStudentsBySkill'])->name('students.by.skill');
 
     
+    Route::get('/admin/proof-document/view/{id}', [AdminController::class, 'viewDocument'])->name('admin.view.document');

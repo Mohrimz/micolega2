@@ -17,7 +17,9 @@
                             <p><strong>Skill:</strong> {{ $document->skill->name }}</p>
                             <p><strong>User:</strong> {{ $document->user->name }}</p>
                             <p><strong>Document:</strong>
-                                <a href="{{ Storage::url($document->document_path) }}" target="_blank" class="text-blue-500 hover:underline">View Document</a>
+                                <a href="{{ route('admin.view.document', $document->id) }}" target="_blank" class="text-blue-500 hover:underline">
+                                    View Document
+                                </a>
                             </p>
 
                             <form action="{{ route('admin.proof.update', $document->id) }}" method="POST" class="mt-4">
@@ -102,39 +104,7 @@
                     </div>
 
                 @else
-                    <!-- Tutors Recommendation Section -->
-<div class="mt-6">
-    <h3 class="text-2xl font-semibold">Recommended Tutors for You:</h3>
-    @foreach($tutors as $tutor)
-        <div class="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm">
-            <p><strong>Name:</strong> {{ $tutor->name }}</p>
-            <p><strong>Email:</strong> {{ $tutor->email }}</p>
-
-            <form action="{{ route('tutors.requestSession') }}" method="POST" class="mt-4">
-                @csrf
-                <input type="hidden" name="tutor_id" value="{{ $tutor->id }}">
-
-                <label for="skill_id" class="block text-gray-700">Select Skill:</label>
-                <select name="skill_id" id="skill_id" class="border rounded p-3 w-full">
-                    @foreach($skills as $skill)
-                        <option value="{{ $skill->id }}">{{ $skill->name }}</option>
-                    @endforeach
-                </select>
-
-                <!-- Display tutor's available slots -->
-                <label for="availability_id" class="block text-gray-700 mt-4">Select Available Slot:</label>
-                <select name="availability_id" id="availability_id" class="border rounded p-3 w-full">
-                    @foreach($tutor->availabilities as $availability)
-                        <option value="{{ $availability->id }}">{{ $availability->date }} at {{ $availability->time }}</option>
-                    @endforeach
-                </select>
-
-                <button type="submit" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">Request Session</button>
-            </form>
-        </div>
-    @endforeach
-</div>
-
+                    <p>You do not have permission to view this page.</p>
                 @endif
             </div>
         </div>
