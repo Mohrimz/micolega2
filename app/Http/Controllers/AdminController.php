@@ -103,4 +103,18 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Skill deleted successfully.');
     }
+    public function rejectProof(Request $request)
+    {
+        $request->validate([
+            'document_id' => 'required|exists:proof_documents,id',
+            'rejection_reason' => 'required|string|max:500',
+        ]);
+
+        $document = ProofDocument::findOrFail($request->document_id);
+        $document->status = 'rejected';
+        $document->rejection_reason = $request->rejection_reason;
+        $document->save();
+
+        return redirect()->back()->with('success', 'Rejection reason submitted successfully.');
+    }
 }

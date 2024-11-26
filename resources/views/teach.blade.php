@@ -52,7 +52,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8">
             <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
                 <h2 class="text-2xl font-semibold mb-6">Skills and Demand</h2>
-                
+
                 <!-- Available Skills Table -->
                 <h3 class="text-lg font-medium mb-4">Available Skills</h3>
                 <h5 class="text-lg font-medium mb-4 bg-red-200">If interested in teaching, please upload certificates received from the relevant platform as proof</h5>
@@ -67,10 +67,22 @@
                     </thead>
                     <tbody>
                         @foreach ($skills as $skill)
+                            @php
+                                // Calculate demand for each level dynamically
+                                $levelDemand = [
+                                    'L4' => $skill->users->where('level', 'L4')->count(),
+                                    'L5' => $skill->users->where('level', 'L5')->count(),
+                                    'L6' => $skill->users->where('level', 'L6')->count(),
+                                ];
+                            @endphp
                             <tr class="hover:bg-gray-50">
                                 <td class="py-3 px-4 border-b">{{ $skill->name }}</td>
                                 <td class="py-3 px-4 border-b">{{ $skill->description }}</td>
-                                <td class="py-3 px-4 border-b">{{ $skill->users_count }}</td>
+                                <td class="py-3 px-4 border-b">
+                                    <span class="block">L4: {{ $levelDemand['L4'] }}</span>
+                                    <span class="block">L5: {{ $levelDemand['L5'] }}</span>
+                                    <span class="block">L6: {{ $levelDemand['L6'] }}</span>
+                                </td>
                                 <td class="py-3 px-4 border-b">
                                     <button @click="showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                         Teach Skill
@@ -108,70 +120,110 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- Approved Skills Section -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8" 
-             x-data="{ showUserModal: false, students: [], fetchStudents(skillId) {
-                this.showUserModal = true;
+      <!-- Approved Skills Section -->
+<div 
+    class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8"
+    x-data="{ showUserModal: false, students: [], fetchStudents(skillId) {
+        // Show the modal
+        this.showUserModal = true;
 
-                fetch(`/students/${skillId}`)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        this.students = data;
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching students:', error);
-                        this.students = [];
-                    });
-            }}">
-            <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
-                <h2 class="text-2xl font-semibold mb-6">Approved Skills</h2>
-                @if($approvedSkills->isEmpty())
-                    <p class="text-gray-600">You have no approved skills to teach yet.</p>
-                @else
-                    <ul class="list-disc pl-6">
-                        @foreach($approvedSkills as $skill)
-                            <li class="text-gray-600 mb-4">
-                                <div class="flex justify-between items-center">
-                                    <!-- Skill Name -->
-                                    <span>{{ $skill->name }}</span>
-                                    <button 
-                                        @click="fetchStudents({{ $skill->id }})" 
-                                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                                        Access
-                                    </button>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
+        // Fetch students from the server
+        fetch(`/students/${skillId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                this.students = data; // Update students array with response data
+            })
+            .catch((error) => {
+                console.error('Error fetching students:', error);
+                this.students = []; // Fallback to empty if there's an error
+            });
+    }}"
+>
+    <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-6">Approved Skills</h2>
+        
+        @if($approvedSkills->isEmpty())
+            <p class="text-gray-600">You have no approved skills to teach yet.</p>
+        @else
+            <ul class="list-disc pl-6">
+                @foreach($approvedSkills as $skill)
+                    <li class="text-gray-600 mb-4">
+                        <div class="flex justify-between items-center">
+                            <!-- Skill Name -->
+                            <span>{{ $skill->name }}</span>
 
-            <!-- Modal for Student Details -->
-            <div x-show="showUserModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                    <h3 class="text-xl font-semibold mb-4">Students Interested in this Skill</h3>
-                    <template x-if="students.length > 0">
-                        <ul>
-                            <template x-for="student in students" :key="student.id">
-                                <li class="mb-2 text-gray-700">
-                                    <strong>Name:</strong> <span x-text="student.name"></span><br>
-                                    <strong>Level:</strong> <span x-text="student.level"></span>
-                                </li>
-                            </template>
-                        </ul>
-                    </template>
-                    <p x-show="students.length === 0" class="text-gray-600">No students found for this skill.</p>
-                    <div class="flex justify-end">
-                        <button @click="showUserModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-                            Close
-                        </button>
+                            <!-- One-to-One and Group Access Buttons -->
+                            <div class="flex space-x-4">
+                                <!-- One-to-One -->
+                                <button 
+                                    @click="fetchStudents({{ $skill->id }})" 
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                    Access
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div><!-- Rejected Skills Section -->
+<div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-6">Rejected Skills</h2>
+
+    @if($rejectedSkills->isEmpty())
+        <p class="text-gray-600">You have no rejected skills at the moment.</p>
+    @else
+        <ul class="list-disc pl-6">
+            @foreach($rejectedSkills as $skill)
+                <li class="text-gray-600 mb-4">
+                    <div class="flex justify-between items-center">
+                        <!-- Skill Name and Description -->
+                        <div>
+                            <strong>{{ $skill->skill->name }}</strong>
+                            <p class="text-sm text-gray-500">{{ $skill->skill->description }}</p>
+                        </div>
+
+                        <!-- Rejection Reason -->
+                        <div class="text-right">
+                            <span class="text-red-600 italic text-sm font-medium">
+                                Reason: {{ $skill->rejection_reason }}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</div>
+
+
+    
+
+    <!-- Modal for Student Details -->
+    <div x-show="showUserModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-semibold mb-4">Students Interested in this Skill</h3>
+            <template x-if="students.length > 0">
+                <ul>
+                    <template x-for="student in students" :key="student.id">
+                        <li class="mb-2 text-gray-700">
+                            <strong>Name:</strong> <span x-text="student.name"></span><br>
+                            <strong>Level:</strong> <span x-text="student.level"></span>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <p x-show="students.length === 0" class="text-gray-600">No students found for this skill.</p>
+            <div class="flex justify-end">
+                <button @click="showUserModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                    Close
+                </button>
             </div>
         </div>
     </div>
-
+</div>
 
 
         <!-- Session Requests Section -->

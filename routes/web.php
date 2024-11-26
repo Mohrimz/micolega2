@@ -88,5 +88,11 @@ Route::put('/teach/session-requests/{id}', [TeachController::class, 'updateSessi
     });
     Route::get('/students/{skillId}', [TeachController::class, 'getStudentsBySkill'])->name('students.by.skill');
 
-    
-    Route::get('/admin/proof-document/view/{id}', [AdminController::class, 'viewDocument'])->name('admin.view.document');
+    Route::post('/admin/proof/reject', [AdminController::class, 'rejectProof'])->name('admin.proof.reject');
+
+Route::get('/admin/proof-document/view/{id}', [AdminController::class, 'viewDocument'])->name('admin.view.document');
+// Route to display the Teach page with rejected skills
+Route::get('/teach', [TeachController::class, 'index'])->name('teach');
+
+// Route to handle the update of proof document status (approve/reject)
+Route::put('/proof/update/{id}', [TeachController::class, 'updateProofStatus'])->name('proof.update');

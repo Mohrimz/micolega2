@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class TeachController extends Controller
 {
     /**
-     * Display the "Teach" page with skills, session requests, and approved skills.
+     * Display the "Teach" page with skills, session requests, approved, and rejected skills.
      */
     public function index()
     {
@@ -39,7 +39,13 @@ class TeachController extends Controller
             ->get()
             ->pluck('skill'); // Extract only the skills
 
-        return view('teach', compact('skills', 'sessionRequests', 'approvedSkills'));
+        // Fetch rejected skills for the logged-in user
+        $rejectedSkills = ProofDocument::where('user_id', Auth::id())
+            ->where('status', 'rejected')
+            ->with(['skill']) // Eager load the associated skill
+            ->get();
+
+        return view('teach', compact('skills', 'sessionRequests', 'approvedSkills', 'rejectedSkills'));
     }
 
     /**
@@ -78,27 +84,28 @@ class TeachController extends Controller
     }
 
     /**
-     * Update the status of a session request (accept or reject).
+     * Update the status of a proof document (approve or reject).
      */
-    public function updateSessionRequestStatus(Request $request, $id)
+    public function updateProofStatus(Request $request, $id)
     {
-        $sessionRequest = SessionRequest::findOrFail($id);
-
-        // Ensure the logged-in user is the tutor for this request
-        if ($sessionRequest->tutor_id != Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $proofDocument = ProofDocument::findOrFail($id);
 
         // Validate the status input
         $request->validate([
-            'status' => 'required|in:accepted,rejected',
+            'status' => 'required|in:approved,rejected',
+            'reason_for_rejection' => 'required_if:status,rejected|max:255', // Validation for rejection reason
         ]);
 
-        // Update the status
-        $sessionRequest->status = $request->status;
-        $sessionRequest->save();
+        // Update the status and reason
+        $proofDocument->status = $request->status;
 
-        return redirect()->route('teach')->with('success', 'Session request status updated successfully!');
+        if ($request->status === 'rejected') {
+            $proofDocument->reason_for_rejection = $request->reason_for_rejection;
+        }
+
+        $proofDocument->save();
+
+        return redirect()->route('teach')->with('success', 'Proof document status updated successfully!');
     }
 
     /**
@@ -110,7 +117,7 @@ class TeachController extends Controller
         $students = User::whereHas('skills', function ($query) use ($skillId) {
             $query->where('skills.id', $skillId);
         })->get(['id', 'name', 'level']);
-    
+
         return response()->json($students);
     }
 }
