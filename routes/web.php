@@ -96,3 +96,5 @@ Route::get('/teach', [TeachController::class, 'index'])->name('teach');
 
 // Route to handle the update of proof document status (approve/reject)
 Route::put('/proof/update/{id}', [TeachController::class, 'updateProofStatus'])->name('proof.update');
+
+Route::put('/session-request/{id}/update', [TeachController::class, 'updateSessionRequestStatus'])->name('session-request.update');

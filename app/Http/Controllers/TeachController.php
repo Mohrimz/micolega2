@@ -120,4 +120,25 @@ class TeachController extends Controller
 
         return response()->json($students);
     }
+    public function updateSessionRequestStatus(Request $request, $id)
+{
+    // Find the session request by its ID
+    $sessionRequest = SessionRequest::findOrFail($id);
+
+    // Ensure the logged-in user is the tutor for this request
+    if ($sessionRequest->tutor_id !== Auth::id()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    // Validate the status input
+    $request->validate([
+        'status' => 'required|in:accepted,rejected',
+    ]);
+
+    // Update the status
+    $sessionRequest->status = $request->status;
+    $sessionRequest->save();
+
+    return redirect()->route('teach')->with('success', 'Session request status updated successfully!');
+}
 }
