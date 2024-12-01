@@ -117,4 +117,19 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Rejection reason submitted successfully.');
     }
+    public function acceptProof(Request $request)
+{
+    $validated = $request->validate([
+        'document_id' => 'required|exists:proof_documents,id',
+        'accept_notes' => 'required|string|max:1000',
+    ]);
+
+    $proofDocument = ProofDocument::find($validated['document_id']);
+    $proofDocument->status = 'approved';
+    $proofDocument->notes = $validated['accept_notes'];
+    $proofDocument->save();
+
+    return redirect()->back()->with('success', 'Document approved with notes.');
+}
+
 }

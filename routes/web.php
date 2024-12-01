@@ -98,3 +98,4 @@ Route::get('/teach', [TeachController::class, 'index'])->name('teach');
 Route::put('/proof/update/{id}', [TeachController::class, 'updateProofStatus'])->name('proof.update');
 
 Route::put('/session-request/update/{id}', [TeachController::class, 'updateSessionRequestStatus'])->name('session-request.update');
+Route::post('/admin/proof/accept', [AdminController::class, 'acceptProof'])->name('admin.proof.accept');

@@ -9,9 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 @if(auth()->user()->hasRole('admin'))
-
-               <!-- Admin Section -->
-<div class="mb-6" x-data="{ showRejectModal: false, rejectionReason: '', selectedDocumentId: null }">
+<!-- Admin Section -->
+<div class="mb-6" x-data="{ showRejectModal: false, showAcceptModal: false, rejectionReason: '', acceptNotes: '', selectedDocumentId: null }">
     <h3 class="text-2xl font-semibold">Pending Requests for Tutoring:</h3>
     @foreach ($proofDocuments->where('status', 'pending') as $document)
     <div class="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm">
@@ -24,12 +23,11 @@
         </p>
 
         <div class="flex items-center space-x-4 mt-4">
-            <form action="{{ route('admin.proof.update', $document->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="status" value="approved">
-                <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">Approve</button>
-            </form>
+            <button 
+                @click="showAcceptModal = true; selectedDocumentId = {{ $document->id }};" 
+                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                Approve with Notes
+            </button>
 
             <button 
                 @click="showRejectModal = true; selectedDocumentId = {{ $document->id }};" 
@@ -69,7 +67,31 @@
             </form>
         </div>
     </div>
+
+    <!-- Accept Modal -->
+    <div x-show="showAcceptModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg w-full max-w-md">
+            <h2 class="text-xl font-bold mb-4">Approval Notes</h2>
+            <form method="POST" action="{{ route('admin.proof.accept') }}">
+                @csrf
+                <input type="hidden" name="document_id" :value="selectedDocumentId">
+                <div class="mb-6">
+                    <label for="accept_notes" class="block text-sm font-medium text-gray-700">Notes</label>
+                    <textarea name="accept_notes" id="accept_notes" x-model="acceptNotes" class="mt-2 block w-full border border-gray-300 rounded-md p-2" required></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" @click="showAcceptModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                        Approve
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
 
 
                 <!-- Available Skills Section -->
