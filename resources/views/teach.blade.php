@@ -227,7 +227,7 @@
 
 
         <!-- Session Requests Section -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" x-data="{ showRejectModal: false, selectedRequestId: null }">
             <h2 class="text-2xl font-semibold mb-4">Pending Session Requests</h2>
             @if($sessionRequests->where('status', 'pending')->isEmpty())
                 <p class="text-gray-600">No pending session requests found.</p>
@@ -249,22 +249,58 @@
                                 <td class="py-3 px-4 border-b">{{ ucfirst($request->status) }}</td>
                                 <td class="py-3 px-4 border-b">
                                     <!-- Show Accept and Reject Buttons only if the request is pending -->
-                                    <form action="{{ route('session-request.update', $request->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="accepted">
-                                        <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600">
-                                            Accept
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('session-request.update', $request->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="rejected">
-                                        <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">
-                                            Reject
-                                        </button>
-                                    </form>
+                                   <!-- Accept Button -->
+<form action="{{ route('session-request.update', $request->id) }}" method="POST" class="inline-block">
+    @csrf
+    @method('PUT')
+    <input type="hidden" name="status" value="accepted">
+    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600">
+        Accept
+    </button>
+</form>
+
+<!-- Reject Button -->
+<button 
+    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+    @click="showRejectModal = true; selectedRequestId = {{ $request->id }}"
+>
+    Reject
+</button>
+<div x-show="showRejectModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4">Rejection Reason</h2>
+        <form :action="'{{ url('session-request/update') }}/' + selectedRequestId" method="POST">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="status" value="rejected">
+            <div class="mb-6">
+                <label for="rejection_reason" class="block text-sm font-medium text-gray-700">Reason for Rejection</label>
+                <textarea 
+                    name="rejection_reason" 
+                    id="rejection_reason" 
+                    class="mt-2 block w-full border border-gray-300 rounded-md p-2" 
+                    required
+                ></textarea>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button 
+                    type="button" 
+                    @click="showRejectModal = false" 
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                >
+                    Cancel
+                </button>
+                <button 
+                    type="submit" 
+                    class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                >
+                    Reject
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
                                 </td>
                             </tr>
                         @endforeach
