@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,6 +37,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'level' => fake()->randomElement(['L4', 'L5', 'L6']),  // Add level field if required
         ];
     }
 
@@ -68,5 +70,51 @@ class UserFactory extends Factory
                 ->when(is_callable($callback), $callback),
             'ownedTeams'
         );
+    }
+
+    /**
+     * Assign a specific role to the user.
+     *
+     * @param string $roleName
+     * @return static
+     */
+    public function assignRole(string $roleName): static
+    {
+        return $this->afterCreating(function (User $user) use ($roleName) {
+            $role = Role::where('RoleName', $roleName)->first(); // Ensure Role exists
+            if ($role) {
+                $user->roles()->attach($role->RoleID);
+            }
+        });
+    }
+
+    /**
+     * Assign the default peer-student role to the user.
+     *
+     * @return static
+     */
+    public function asPeerStudent(): static
+    {
+        return $this->assignRole('peer-student');
+    }
+
+    /**
+     * Assign the peer-tutor role to the user.
+     *
+     * @return static
+     */
+    public function asPeerTutor(): static
+    {
+        return $this->assignRole('peer-tutor');
+    }
+
+    /**
+     * Assign the admin role to the user.
+     *
+     * @return static
+     */
+    public function asAdmin(): static
+    {
+        return $this->assignRole('admin');
     }
 }
