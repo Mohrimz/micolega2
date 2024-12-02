@@ -8,15 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('level')->nullable()->after('password'); // Add "level" field
-        });
+        if (!Schema::hasColumn('users', 'level')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('level')->nullable()->after('password');
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('level'); // Remove "level" field if rolled back
-        });
+        if (Schema::hasColumn('users', 'level')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('level');
+            });
+        }
     }
 };

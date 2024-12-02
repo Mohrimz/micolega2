@@ -1,5 +1,9 @@
 <?php
 
+pest()->extend(Tests\DuskTestCase::class)
+//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,9 +15,18 @@
 |
 */
 
+use Laravel\Dusk\Browser;
+use Tests\Browser\DuskTestCase;
+
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
+
+// Extend Pest to recognize Dusk's browse method
+function browse(callable $callback)
+{
+    //return (new DuskTestCase())->browse($callback);
+}
 
 /*
 |--------------------------------------------------------------------------
