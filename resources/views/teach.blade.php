@@ -224,6 +224,36 @@
         </div>
     </div>
 </div>
+<!-- Rejected Session Requests Section -->
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
+    <h2 class="text-2xl font-semibold mb-4">Rejected Session Requests</h2>
+
+    @if($sessionRequests->where('status', 'rejected')->isEmpty())
+        <p class="text-gray-600">No rejected session requests found.</p>
+    @else
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 border-b font-medium text-left">Requester</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Level</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Skill</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Rejection Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($sessionRequests->where('status', 'rejected') as $request)
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4 border-b">{{ $request->user->name }}</td>
+                        <td class="py-3 px-4 border-b">{{ $request->user->level }}</td>
+                        <td class="py-3 px-4 border-b">{{ $request->skill->name }}</td>
+                        <td class="py-3 px-4 border-b text-red-600 italic">{{ $request->rejection_reason }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+
 
 
         <!-- Session Requests Section -->
