@@ -7,6 +7,7 @@
 
     <div class="py-8" x-data="{ 
         showModal: false, 
+        selectedSkillId: null, 
         errorMessage: '', 
         successMessage: '', 
         validateFileType(files) {
@@ -84,7 +85,8 @@
                                     <span class="block">L6: {{ $levelDemand['L6'] }}</span>
                                 </td>
                                 <td class="py-3 px-4 border-b">
-                                    <button @click="showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                    <!-- Pass the selected skill ID -->
+                                    <button @click="showModal = true; selectedSkillId = {{ $skill->id }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                         Teach Skill
                                     </button>
                                 </td>
@@ -106,9 +108,8 @@
                         <label for="proof" class="block text-sm font-medium text-gray-700">Proof Files</label>
                         <input type="file" name="proof[]" id="proof" class="mt-2 block w-full border border-gray-300 rounded-md p-2" multiple x-ref="files">
                     </div>
-                    @foreach ($skills as $skill)
-                        <input type="hidden" name="skill_id[]" value="{{ $skill->id }}">
-                    @endforeach
+                    <!-- Pass selected skill ID as hidden input -->
+                    <input type="hidden" name="skill_id" :value="selectedSkillId">
                     <div class="flex justify-end space-x-3">
                         <button type="button" @click="showModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                             Cancel

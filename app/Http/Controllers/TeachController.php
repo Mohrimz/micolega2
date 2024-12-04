@@ -52,36 +52,31 @@ class TeachController extends Controller
      * Handle the submission of proof documents for a skill request.
      */
     public function submitSkillRequest(Request $request)
-    {
-        // Validate the request data
-        $request->validate([
-            'proof.*' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'skill_id' => 'required|array',
-            'skill_id.*' => 'exists:skills,id',
-            'proof' => 'required|array|min:1',
-        ]);
+{
+    $request->validate([
+        'proof.*' => 'required|file|mimes:pdf,jpg,png|max:2048',
+        'skill_id' => 'required|exists:skills,id', // Validate single skill_id
+    ]);
 
-        // Create a new SkillRequest
-        $skillRequest = SkillRequest::create([
-            'user_id' => Auth::id(),
-        ]);
+    $skillRequest = SkillRequest::create([
+        'user_id' => Auth::id(),
+    ]);
 
-        // Save proof documents
-        if ($request->hasFile('proof')) {
-            foreach ($request->file('proof') as $index => $file) {
-                $path = $file->store('proof_documents');
-
-                ProofDocument::create([
-                    'user_id' => Auth::id(),
-                    'skill_id' => $request->skill_id[$index],
-                    'document_path' => $path,
-                    'skill_request_id' => $skillRequest->id,
-                ]);
-            }
+    if ($request->hasFile('proof')) {
+        foreach ($request->file('proof') as $file) {
+            $path = $file->store('proof_documents');
+            ProofDocument::create([
+                'user_id' => Auth::id(),
+                'skill_id' => $request->skill_id,
+                'document_path' => $path,
+                'skill_request_id' => $skillRequest->id,
+            ]);
         }
-
-        return redirect()->route('teach')->with('success', 'Proof documents submitted successfully!');
     }
+
+    return redirect()->route('teach')->with('success', 'Proof documents submitted successfully!');
+}
+
 
     /**
      * Update the status of a proof document (approve or reject).
