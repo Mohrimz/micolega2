@@ -84,4 +84,4 @@ class RegisterController extends Controller
         // Redirect to the intended page after registration
         return redirect()->route('dashboard');
     }
-}
+}   
