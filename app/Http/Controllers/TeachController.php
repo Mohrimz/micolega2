@@ -120,4 +120,26 @@ class TeachController extends Controller
 
         return response()->json($students);
     }
+    public function updateSessionRequestStatus(Request $request, $id)
+{
+    $sessionRequest = SessionRequest::findOrFail($id);
+
+    // Validate the input
+    $request->validate([
+        'status' => 'required|in:accepted,rejected',
+        'rejection_reason' => 'required_if:status,rejected|max:255',
+    ]);
+
+    // Update the session request
+    $sessionRequest->status = $request->status;
+
+    if ($request->status === 'rejected') {
+        $sessionRequest->rejection_reason = $request->rejection_reason;
+    }
+
+    $sessionRequest->save();
+
+    return redirect()->route('teach')->with('success', 'Session request updated successfully.');
+}
+
 }
