@@ -26,9 +26,16 @@
                     </div> --}}
                     <img src="{{ asset('images/logoMiColega.jpeg') }}" alt="Logo" class="block h-12 w-auto" />
                     <div class="space-x-4">
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-800">Log in</a>
-                        <a href="{{ route('register') }}" class="text-gray-600 hover:text-gray-800">Register</a>
-                    </div>
+    <a href="{{ route('login') }}" 
+       class="px-4 py-2 border border-black text-gray-600 rounded-full hover:bg-black hover:text-white transition duration-200">
+        Log in
+    </a>
+    <a href="{{ route('register') }}" 
+       class="px-4 py-2 border border-black text-gray-600 rounded-full hover:bg-black hover:text-white transition duration-200">
+        Register
+    </a>
+</div>
+
                 </div>
             </nav>
 

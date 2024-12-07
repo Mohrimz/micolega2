@@ -339,32 +339,39 @@
                 </table>
             @endif
         </div>
+<!-- Accepted Session Requests Section -->
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
+    <h2 class="text-2xl font-semibold mb-4">Accepted Session Requests</h2>
+    @if($sessionRequests->where('status', 'accepted')->isEmpty())
+        <p class="text-gray-600">No accepted session requests found.</p>
+    @else
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 border-b font-medium text-left">Requester</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Skill</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Status</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($sessionRequests->where('status', 'accepted') as $request)
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4 border-b">{{ $request->user->name }}</td>
+                        <td class="py-3 px-4 border-b">{{ $request->skill->name }}</td>
+                        <td class="py-3 px-4 border-b">{{ ucfirst($request->status) }}</td>
+                        <td class="py-3 px-4 border-b">
+                            <a href="{{ route('sessions.join', $request->id) }}" 
+                               class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 inline-block">
+                                Join Session
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
 
-        <!-- Accepted Session Requests Section -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
-            <h2 class="text-2xl font-semibold mb-4">Accepted Session Requests</h2>
-            @if($sessionRequests->where('status', 'accepted')->isEmpty())
-                <p class="text-gray-600">No accepted session requests found.</p>
-            @else
-                <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="py-3 px-4 border-b font-medium text-left">Requester</th>
-                            <th class="py-3 px-4 border-b font-medium text-left">Skill</th>
-                            <th class="py-3 px-4 border-b font-medium text-left">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($sessionRequests->where('status', 'accepted') as $request)
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-3 px-4 border-b">{{ $request->user->name }}</td>
-                                <td class="py-3 px-4 border-b">{{ $request->skill->name }}</td>
-                                <td class="py-3 px-4 border-b">{{ ucfirst($request->status) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
-        </div>
     </div>
 </x-app-layout>

@@ -12,7 +12,9 @@ use App\Http\Controllers\LearnController;
 use App\Http\Controllers\TeachController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Middleware\RedirectIfNotAdmin;
-use App\Http\Controllers\RegisterController; 
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SessionController;
+ 
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
@@ -99,3 +101,4 @@ Route::put('/proof/update/{id}', [TeachController::class, 'updateProofStatus'])-
 
 Route::put('/session-request/update/{id}', [TeachController::class, 'updateSessionRequestStatus'])->name('session-request.update');
 Route::post('/admin/proof/accept', [AdminController::class, 'acceptProof'])->name('admin.proof.accept');
+Route::get('/sessions/join/{id}', [SessionController::class, 'joinSession'])->name('sessions.join');

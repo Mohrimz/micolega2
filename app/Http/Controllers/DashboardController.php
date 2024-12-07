@@ -6,23 +6,40 @@ use Illuminate\Http\Request;
 use App\Models\Skill;
 use App\Models\Category;
 use App\Models\ProofDocument;
+use App\Models\SessionRequest;
 use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $skills = Skill::query()->with('category')->get();
+        $user = auth()->user();
+
+        // Retrieve all skills with their categories
+        $skills = Skill::with('category')->get();
+
+        // Retrieve all categories
         $categories = Category::all();
+
+        // Retrieve all proof documents with related data
         $proofDocuments = ProofDocument::with('skill', 'user')->get();
+
+        // Retrieve all tutors with their availabilities
         $tutors = User::role('tutor')->with('availabilities')->get();
 
-        // Filtering logic (if applicable)
+        // Retrieve all accepted sessions for the logged-in user (students)
+        $acceptedSessions = SessionRequest::where('status', 'accepted')
+            ->where('user_id', $user->id)
+            ->with(['skill', 'tutor', 'user'])
+            ->latest()
+            ->get();
+
+        // Apply filtering logic if applicable
         if ($request->has('filter_skill')) {
             $skills = $skills->where('name', 'like', '%' . $request->input('filter_skill') . '%');
         }
 
-        return view('dashboard', compact('skills', 'categories', 'proofDocuments', 'tutors'));
+        // Pass data to the view
+        return view('dashboard', compact('skills', 'categories', 'proofDocuments', 'tutors', 'acceptedSessions'));
     }
 }
-
