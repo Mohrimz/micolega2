@@ -10,20 +10,27 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-white font-bold">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    @if(auth()->user()->hasRole('peer-student'))
-                    <x-nav-link href="{{ route('teach') }}" :active="request()->routeIs('teach')" class="text-white font-bold">
-                        {{ __('Teach') }}
-                    </x-nav-link>
-                    @if(auth()->user()->hasRole('peer-tutor'))
-                    @endif
-                    @endif
-                </div>
-            </div>
+               <!-- Navigation Links -->
+<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+    <!-- Dashboard Link -->
+    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-white font-bold">
+        {{ __('Dashboard') }}
+    </x-nav-link>
+
+    <!-- Teach Link (For Tutors) -->
+    @if(auth()->user()->hasRole('peer-tutor'))
+        <x-nav-link href="{{ route('teach') }}" :active="request()->routeIs('teach')" class="text-white font-bold">
+            {{ __('Teach') }}
+        </x-nav-link>
+    @endif
+
+    <!-- Sessions Link -->
+     <x-nav-link href="{{ route('sessions.index') }}" :active="request()->routeIs('sessions.*')" class="text-white font-bold">
+    {{ __('Sessions') }}
+    </x-nav-link>
+
+</div>
+
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Settings Dropdown -->
