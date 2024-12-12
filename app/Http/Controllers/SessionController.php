@@ -68,6 +68,6 @@ class SessionController extends Controller
         $sessionRequest->update(['status' => 'canceled']);
 
         // Redirect back to the sessions page with a success message
-        return redirect()->route('sessions.index')->with('success', 'Session canceled successfully.');
+        return redirect()->route('sessions.index')->with('success', 'Session cancelled successfully.');
     }
 }

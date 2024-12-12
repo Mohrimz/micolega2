@@ -11,6 +11,11 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <!-- Exclude Dusk tests to avoid conflicts -->
+        <testsuite name="Application Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+            <exclude>./tests/Browser</exclude>
+        </testsuite>
     </testsuites>
     <source>
         <include>

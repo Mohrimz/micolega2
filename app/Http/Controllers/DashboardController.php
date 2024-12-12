@@ -8,12 +8,12 @@ use App\Models\Category;
 use App\Models\ProofDocument;
 use App\Models\SessionRequest;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Retrieve all skills with their categories
         $skills = Skill::with('category')->get();
