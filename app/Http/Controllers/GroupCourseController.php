@@ -66,14 +66,12 @@ class GroupCourseController extends Controller
         return view('group_sessions.accepted', compact('acceptedSessions'));
     }
     public function joinSession($id)
-{
-    $course = GroupCourse::findOrFail($id);
-
-    // Example setup for joining a session
-    $meetingRoom = 'group-session-' . $id; // Generate a unique room name
-
-    return view('sessions.join', compact('course', 'meetingRoom'));
-}
+    {
+        $groupCourse = GroupCourse::with('skill', 'creator')->findOrFail($id);
+    
+        return view('group_sessions.join', compact('groupCourse'));
+    }
+    
 public function skill()
 {
     return $this->belongsTo(Skill::class);
