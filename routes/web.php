@@ -15,6 +15,8 @@ use App\Http\Middleware\RedirectIfNotAdmin;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentSessionController;
+use App\Http\Controllers\GroupCourseController;
+
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
@@ -111,3 +113,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/sessions', [StudentSessionController::class, 'index'])->name('student.sessions.index');
     Route::get('/student/sessions/join/{id}', [StudentSessionController::class, 'joinSession'])->name('student.sessions.join');
 });
+
+Route::get('/group-sessions', [GroupCourseController::class, 'index'])->name('group-sessions');
+Route::post('/group-courses', [GroupCourseController::class, 'store'])->name('group-courses.store');    
+Route::get('/group-sessions/accepted', [GroupCourseController::class, 'acceptedSessions'])->name('group-sessions.accepted');
+Route::get('/join-session/{id}', [GroupCourseController::class, 'joinSession'])->name('join.session');

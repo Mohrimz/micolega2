@@ -69,4 +69,15 @@ class Skill extends Model
             'L6' => $this->users->where('level', 'L6')->count(),
         ];
     }
+    public function proofDocuments()
+{
+    return $this->hasMany(ProofDocument::class, 'skill_id');
+}
+
+
+    public function groupCourses()
+{
+    return $this->hasMany(GroupCourse::class);
+}
+
 }

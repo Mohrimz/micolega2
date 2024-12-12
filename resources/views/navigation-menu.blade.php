@@ -28,6 +28,11 @@
      <x-nav-link href="{{ route('sessions.index') }}" :active="request()->routeIs('sessions.*')" class="text-white font-bold">
     {{ __('Sessions') }}
     </x-nav-link>
+    <!-- Group Sessions Link -->
+    <x-nav-link href="{{ route('group-sessions') }}" :active="request()->routeIs('group-sessions')" class="text-white font-bold">
+        {{ __('Group Sessions') }}
+    </x-nav-link>
+    
 
 </div>
 

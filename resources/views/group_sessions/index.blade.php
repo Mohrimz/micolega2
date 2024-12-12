@@ -1,0 +1,106 @@
+<x-app-layout>
+    <div x-data="{ showModal: false }" class="min-h-screen bg-gray-100">
+        <!-- Header Section with Title and Button -->
+        <div class="flex justify-center items-center px-6 py-4 bg-white shadow-md">
+            <!-- Group Sessions Title and Button -->
+            <div class="flex items-center space-x-4">
+                <h1 class="text-2xl font-bold text-gray-800">Group Sessions</h1>
+                <button 
+                    @click="showModal = true" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Create Group Course
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Courses List -->
+        <div class="container mx-auto mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Available Group Courses</h2>
+            @if($groupCourses->isEmpty())
+                <p class="text-gray-600 text-center">No group courses available yet.</p>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($groupCourses as $course)
+    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-gray-50 hover:bg-gray-100 transition duration-200">
+        <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $course->skill->name ?? 'Skill Not Found' }}</h4>
+        <p class="text-gray-700"><strong>Tutor:</strong> {{ $course->creator->name ?? 'Unknown' }}</p>
+        <p class="text-gray-700"><strong>Level:</strong> {{ $course->level }}</p>
+        <p class="text-gray-700"><strong>Date:</strong> {{ $course->date }}</p>
+        <p class="text-gray-700"><strong>Time:</strong> {{ $course->time }}</p>
+        <a href="{{ route('join.session', $course->id) }}" 
+           class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full text-center inline-block">
+            Join Session
+        </a>
+    </div>
+@endforeach
+                </div>
+            @endif
+        </div>
+
+        <!-- Modal -->
+<div 
+    x-show="showModal" 
+    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+    x-cloak>
+    <div class="bg-white p-8 rounded-lg w-full max-w-md shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Create Group Course</h2>
+        <form method="POST" action="{{ route('group-courses.store') }}">
+            @csrf
+            <!-- Skill Dropdown -->
+            <div class="mb-4">
+                <label for="skill_id" class="block text-sm font-medium text-gray-700">Skill</label>
+                <select name="skill_id" id="skill_id" class="w-full border-gray-300 rounded-md p-2 mt-1" required>
+                    @foreach($skills as $skill)
+                        <option value="{{ $skill->id }}" {{ $skill->approved ? '' : 'disabled' }}>
+                            {{ $skill->name }} {{ $skill->approved ? '' : '(Not Approved)' }}
+                        </option>
+                    @endforeach
+                </select>
+
+            </div>
+
+            <!-- Level -->
+            <div class="mb-4">
+                <label for="level" class="block text-sm font-medium text-gray-700">Level</label>
+                <select name="level" id="level" class="w-full border-gray-300 rounded-md p-2 mt-1" required>
+                    <option value="L4">L4</option>
+                    <option value="L5">L5</option>
+                    <option value="L6">L6</option>
+                </select>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-4">
+                <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" name="date" id="date" 
+                       class="w-full border-gray-300 rounded-md p-2 mt-1" required>
+            </div>
+
+            <!-- Time -->
+            <div class="mb-4">
+                <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
+                <input type="time" name="time" id="time" 
+                       class="w-full border-gray-300 rounded-md p-2 mt-1" required>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end space-x-4">
+                <button 
+                    type="button" 
+                    @click="showModal = false" 
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                    Cancel
+                </button>
+                <button 
+                    type="submit" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    </div>
+</x-app-layout>
