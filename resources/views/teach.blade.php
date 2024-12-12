@@ -125,7 +125,7 @@
 
       <!-- Approved Skills Section -->
 <div 
-    class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8"
+    class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8 "
     x-data="{ showUserModal: false, students: [], fetchStudents(skillId) {
         // Show the modal
         this.showUserModal = true;
@@ -170,7 +170,7 @@
             </ul>
         @endif
     </div><!-- Rejected Skills Section -->
-<div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
+<div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8">
     <h2 class="text-2xl font-semibold mb-6">Rejected Skills</h2>
 
     @if($rejectedSkills->isEmpty())
@@ -224,9 +224,9 @@
             </div>
         </div>
     </div>
-</div>
+
 <!-- Rejected Session Requests Section -->
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
+<div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8">
     <h2 class="text-2xl font-semibold mb-4">Rejected Session Requests</h2>
 
     @if($sessionRequests->where('status', 'rejected')->isEmpty())
@@ -258,7 +258,7 @@
 
 
         <!-- Session Requests Section -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" x-data="{ showRejectModal: false, selectedRequestId: null }">
+        <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8" x-data="{ showRejectModal: false, selectedRequestId: null }">
             <h2 class="text-2xl font-semibold mb-4">Pending Session Requests</h2>
             @if($sessionRequests->where('status', 'pending')->isEmpty())
                 <p class="text-gray-600">No pending session requests found.</p>
@@ -292,7 +292,7 @@
 
 <!-- Reject Button -->
 <button 
-    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+    class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8"
     @click="showRejectModal = true; selectedRequestId = {{ $request->id }}"
 >
     Reject
@@ -340,7 +340,7 @@
             @endif
         </div>
 <!-- Accepted Session Requests Section -->
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
+<div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8">
     <h2 class="text-2xl font-semibold mb-4">Accepted Session Requests</h2>
     @if($sessionRequests->where('status', 'accepted')->isEmpty())
         <p class="text-gray-600">No accepted session requests found.</p>

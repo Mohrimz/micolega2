@@ -15,7 +15,7 @@
 
                 <div class="mt-6">
                     <p class="text-lg font-semibold">Join the Session:</p>
-                    <iframe src="https://meet.jit.si/{{ $sessionRequest->id }}" width="100%" height="600" class="mt-4"></iframe>
+                    <iframe src="https://meet.jit.si/{{ $sessionRequest->id }}-{{ $sessionRequest->user_id }}" width="100%" height="600" class="mt-4"></iframe>
                 </div>
             </div>
         </div>
