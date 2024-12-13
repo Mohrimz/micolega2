@@ -11,17 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            
-            $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable();
-            $table->timestamps();
+        // Add the level column to the users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('level')->nullable()->after('password'); // Add level column after password
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -45,9 +37,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        // Remove the level column from the users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('level');
+        });
+
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
-    
 };

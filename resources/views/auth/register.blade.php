@@ -3,7 +3,7 @@
         <img src="{{ asset('images/logoMiColega.jpeg') }}" alt="Logo" class="block mx-auto h-16 w-auto mb-6" />
     </x-slot>
 
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-10">
         <h1 class="text-xl font-bold text-center text-gray-800 mb-4">{{ __('Register') }}</h1>
 
         <x-validation-errors class="mb-4" />
@@ -57,7 +57,7 @@
                     <option value="">{{ __('Choose your level') }}</option>
                     <option value="L4" {{ old('level') === 'L4' ? 'selected' : '' }}>L4</option>
                     <option value="L5" {{ old('level') === 'L5' ? 'selected' : '' }}>L5</option>
-                    <option value="L6" {{ old('level') === 'L6' ? 'selected' : '' }}>L6</option>
+                   
                 </select>
             </div>
 
