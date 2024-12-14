@@ -112,4 +112,40 @@ class TeachController extends Controller
 
         return redirect()->route('teach')->with('success', 'Session request updated successfully.');
     }
+    /**
+ * Submit a skill request along with proof documents.
+ */
+public function submitSkillRequest(Request $request)
+{
+    $request->validate([
+        'skill_id' => 'required|exists:skills,id',
+        'proof_documents.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+    ]);
+
+    $user = Auth::user();
+
+    // Create a new SkillRequest
+    $skillRequest = SkillRequest::create([
+        'user_id' => $user->id,
+        'status' => 'pending',
+    ]);
+
+    // Handle the uploaded proof documents
+    foreach ($request->file('proof_documents') as $file) {
+        $filePath = $file->store('proof_documents', 'public');
+
+        ProofDocument::create([
+            'user_id' => $user->id,
+            'skill_id' => $request->input('skill_id'),
+            'document_path' => $filePath,
+            'status' => 'pending',
+            'skill_request_id' => $skillRequest->id,
+            'notes' => null, // Explicitly set to null
+            'rejection_reason' => null, // Explicitly set to null
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Your skill request has been submitted successfully!');
+}
+
 }
