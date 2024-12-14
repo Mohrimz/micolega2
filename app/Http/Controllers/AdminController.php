@@ -19,7 +19,7 @@ class AdminController extends Controller
         
         $proofDocuments = ProofDocument::with(['skill', 'user'])->get();
 
-    // Remove the debugging line (dd)
+    
     return view('dashboard', compact('categories', 'skills', 'proofDocuments'));
     }
     
