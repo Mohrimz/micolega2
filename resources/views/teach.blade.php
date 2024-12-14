@@ -343,7 +343,7 @@
                 </table>
             @endif
         </div>
-<!-- Accepted Session Requests Section -->
+            <!-- Accepted Session Requests Section -->
 <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8">
     <h2 class="text-2xl font-semibold mb-4">Accepted Session Requests</h2>
     @if($sessionRequests->where('status', 'accepted')->isEmpty())
@@ -354,7 +354,9 @@
                 <tr>
                     <th class="py-3 px-4 border-b font-medium text-left">Requester</th>
                     <th class="py-3 px-4 border-b font-medium text-left">Skill</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Level</th>
                     <th class="py-3 px-4 border-b font-medium text-left">Status</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Time</th>
                     <th class="py-3 px-4 border-b font-medium text-left">Action</th>
                 </tr>
             </thead>
@@ -363,7 +365,9 @@
                     <tr class="hover:bg-gray-50">
                         <td class="py-3 px-4 border-b">{{ $request->user->name }}</td>
                         <td class="py-3 px-4 border-b">{{ $request->skill->name }}</td>
+                        <td class="py-3 px-4 border-b">{{ $request->level ?? 'N/A' }}</td> <!-- Added Level -->
                         <td class="py-3 px-4 border-b">{{ ucfirst($request->status) }}</td>
+                        <td class="py-3 px-4 border-b">08:00:00</td> <!-- Hardcoded Time -->
                         <td class="py-3 px-4 border-b">
                             <a href="{{ route('sessions.join', $request->id) }}" 
                                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 inline-block">
@@ -376,6 +380,7 @@
         </table>
     @endif
 </div>
+
 
     </div>
 </x-app-layout>

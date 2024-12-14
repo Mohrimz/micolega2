@@ -30,7 +30,9 @@ class TeachController extends Controller
         });
 
         // Fetch session requests for the logged-in tutor
-        $sessionRequests = SessionRequest::where('tutor_id', Auth::id())->get();
+        $sessionRequests = SessionRequest::where('tutor_id', Auth::id())
+            ->with(['user', 'skill',]) // Eager load user and skill relationships
+            ->get();
 
         // Fetch approved skills for the logged-in user
         $approvedSkills = ProofDocument::where('user_id', Auth::id())
@@ -47,9 +49,6 @@ class TeachController extends Controller
 
         return view('teach', compact('skills', 'sessionRequests', 'approvedSkills', 'rejectedSkills'));
     }
-
-    /**p
-
 
     /**
      * Update the status of a proof document (approve or reject).
@@ -88,26 +87,29 @@ class TeachController extends Controller
 
         return response()->json($students);
     }
+
+    /**
+     * Update the status of a session request (accept or reject).
+     */
     public function updateSessionRequestStatus(Request $request, $id)
-{
-    $sessionRequest = SessionRequest::findOrFail($id);
+    {
+        $sessionRequest = SessionRequest::findOrFail($id);
 
-    // Validate the input
-    $request->validate([
-        'status' => 'required|in:accepted,rejected',
-        'rejection_reason' => 'required_if:status,rejected|max:255',
-    ]);
+        // Validate the input
+        $request->validate([
+            'status' => 'required|in:accepted,rejected',
+            'rejection_reason' => 'required_if:status,rejected|max:255',
+        ]);
 
-    // Update the session request
-    $sessionRequest->status = $request->status;
+        // Update the session request
+        $sessionRequest->status = $request->status;
 
-    if ($request->status === 'rejected') {
-        $sessionRequest->rejection_reason = $request->rejection_reason;
+        if ($request->status === 'rejected') {
+            $sessionRequest->rejection_reason = $request->rejection_reason;
+        }
+
+        $sessionRequest->save();
+
+        return redirect()->route('teach')->with('success', 'Session request updated successfully.');
     }
-
-    $sessionRequest->save();
-
-    return redirect()->route('teach')->with('success', 'Session request updated successfully.');
-}
-
 }

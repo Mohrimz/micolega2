@@ -118,3 +118,4 @@ Route::get('/group-sessions', [GroupCourseController::class, 'index'])->name('gr
 Route::post('/group-courses', [GroupCourseController::class, 'store'])->name('group-courses.store');    
 Route::get('/group-sessions/accepted', [GroupCourseController::class, 'acceptedSessions'])->name('group-sessions.accepted');
 Route::get('/join-session/{id}', [GroupCourseController::class, 'joinSession'])->name('join.session');
+Route::get('/group-sessions/filter', [SessionController::class, 'filterGroupCourses'])->name('group-sessions.filter');
