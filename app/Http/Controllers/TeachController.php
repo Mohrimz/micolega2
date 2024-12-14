@@ -112,4 +112,30 @@ class TeachController extends Controller
 
         return redirect()->route('teach')->with('success', 'Session request updated successfully.');
     }
+    public function submitSkillRequest(Request $request)
+{
+    // Validate the input data
+    $request->validate([
+        'proof' => 'required|array', // Ensure the 'proof' field is an array
+        'proof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048', // Validate each file
+        'skill_id' => 'required|exists:skills,id', // Validate the skill_id exists in the skills table
+    ]);
+
+    // Process each uploaded file
+    foreach ($request->file('proof') as $file) {
+        // Store the file in the 'proof_documents' directory
+        $filePath = $file->store('proof_documents', 'public');
+
+        // Save the file information in the database
+        ProofDocument::create([
+            'user_id' => Auth::id(), // ID of the logged-in user
+            'skill_id' => $request->skill_id, // Skill ID from the form
+            'document_path' => $filePath, // Path to the uploaded file
+            'status' => 'pending', // Default status
+        ]);
+    }
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Proof documents uploaded successfully!');
+}
 }

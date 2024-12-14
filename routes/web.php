@@ -87,7 +87,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         
         Route::get('/teach', [TeachController::class, 'index'])->name('teach');
 Route::put('/teach/session-requests/{id}', [TeachController::class, 'updateSessionRequestStatus'])->name('session-request.update');
-        Route::post('/submit-skill-request', [TeachController::class, 'submitSkillRequest'])->name('submit.skill.request');
+        
         Route::post('/tutors/request-session', [LearnController::class, 'requestSession'])->name('tutors.requestSession');
     });
     Route::get('/students/{skillId}', [TeachController::class, 'getStudentsBySkill'])->name('students.by.skill');
