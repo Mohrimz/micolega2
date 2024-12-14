@@ -156,44 +156,61 @@
 
                 @else
                 
-                <!-- Tutors Recommendation Section -->
-                <div class="mt-6">
-                    <h3 class="text-2xl font-semibold mb-6">Recommended Tutors for You:</h3>
+  <!-- Tutors Recommendation Section -->
+<div x-data="{ showSuccess: false, successMessage: '' }" class="mt-6">
+    <h3 class="text-2xl font-semibold mb-6">Recommended Tutors for You:</h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($tutors as $tutor)
-                        <div class="p-4 border border-gray-300 rounded-lg shadow-sm bg-white">
-                            <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $tutor->name }}</h4>
-                            <p class="text-gray-700"><strong>Email:</strong> {{ $tutor->email }}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($tutors as $tutor)
+        <div class="p-4 border border-gray-300 rounded-lg shadow-sm bg-white">
+            <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $tutor->name }}</h4>
+            <p class="text-gray-700"><strong>Email:</strong> {{ $tutor->email }}</p>
 
-                            <form action="{{ route('tutors.requestSession') }}" method="POST" class="mt-4">
-                                @csrf
-                                <input type="hidden" name="tutor_id" value="{{ $tutor->id }}">
+            <form action="{{ route('tutors.requestSession') }}" method="POST" class="mt-4" 
+                  @submit.prevent="
+                    successMessage = 'Your session request has been successfully submitted!';
+                    showSuccess = true;
+                    setTimeout(() => { showSuccess = false; }, 10000); // Hide after 5 seconds
+                    $el.submit();
+            ">
+                @csrf
+                <input type="hidden" name="tutor_id" value="{{ $tutor->id }}">
 
-                                <!-- Select Skill -->
-                                <label for="skill_id_{{ $tutor->id }}" class="block text-gray-700">Select Skill:</label>
-                                <select name="skill_id" id="skill_id_{{ $tutor->id }}" class="border rounded p-3 w-full">
-                                    @foreach($skills as $skill)
-                                    <option value="{{ $skill->id }}">{{ $skill->name }}</option>
-                                    @endforeach
-                                </select>
+                <!-- Select Skill -->
+                <label for="skill_id_{{ $tutor->id }}" class="block text-gray-700">Select Skill:</label>
+                <select name="skill_id" id="skill_id_{{ $tutor->id }}" class="border rounded p-3 w-full">
+                    @foreach($skills as $skill)
+                    <option value="{{ $skill->id }}">{{ $skill->name }}</option>
+                    @endforeach
+                </select>
 
-                                <!-- Select Availability -->
-                                <label for="availability_id_{{ $tutor->id }}" class="block text-gray-700 mt-4">Select Available Slot:</label>
-                                <select name="availability_id" id="availability_id_{{ $tutor->id }}" class="border rounded p-3 w-full">
-                                    @foreach($tutor->availabilities as $availability)
-                                    <option value="{{ $availability->id }}">{{ $availability->date }} at {{ $availability->time }}</option>
-                                    @endforeach
-                                </select>
+                <!-- Select Availability -->
+                <label for="availability_id_{{ $tutor->id }}" class="block text-gray-700 mt-4">Select Available Slot:</label>
+                <select name="availability_id" id="availability_id_{{ $tutor->id }}" class="border rounded p-3 w-full">
+                    @foreach($tutor->availabilities as $availability)
+                    <option value="{{ $availability->id }}">{{ $availability->date }} at {{ $availability->time }}</option>
+                    @endforeach
+                </select>
 
-                                <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full">
-                                    Request Session
-                                </button>
-                            </form>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
+                <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full">
+                    Request Session
+                </button>
+            </form>
+        </div>
+        @endforeach
+    </div>
+
+    <!-- Success Message Modal -->
+    <div x-show="showSuccess" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50" x-transition>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+            <h2 class="text-xl font-bold mb-4 text-green-600" x-text="successMessage"></h2>
+            <button @click="showSuccess = false" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
                 @endif
             </div>
         </div>

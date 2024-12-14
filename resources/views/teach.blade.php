@@ -1,46 +1,49 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-            {{ __('Teach') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-8" x-data="{ 
-        showModal: false, 
-        selectedSkillId: null, 
-        errorMessage: '', 
-        successMessage: '', 
-        validateFileType(files) {
-            if (files.length === 0) {
-                this.errorMessage = 'Please upload at least one file.';
+<div x-data="{ 
+    showModal: false, 
+    selectedSkillId: null, 
+    showGroupCourseModal: false, 
+    errorMessage: '', 
+    successMessage: '', 
+    validateFileType(files) {
+        if (files.length === 0) {
+            this.errorMessage = 'Please upload at least one file.';
+            this.successMessage = '';
+            return false;
+        }
+        const allowedExtensions = ['pdf', 'png', 'jpeg', 'jpg'];
+        for (let file of files) {
+            const extension = file.name.split('.').pop().toLowerCase();
+            if (!allowedExtensions.includes(extension)) {
+                this.errorMessage = 'Please upload valid files.';
                 this.successMessage = '';
                 return false;
             }
-            const allowedExtensions = ['pdf', 'png'];
-            for (let file of files) {
-                const extension = file.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(extension)) {
-                    this.errorMessage = 'Please upload only PDF and PNG files.';
-                    this.successMessage = '';
-                    return false;
-                }
-            }
-            this.errorMessage = ''; // Clear error if all validations pass
-            return true;
-        },
-        handleSuccess() {
-            this.successMessage = 'File uploaded successfully!';
-            this.errorMessage = '';
-            this.showModal = false;
-
-            // Auto-hide the success message after 3 seconds
-            setTimeout(() => {
-                this.successMessage = '';
-                window.location.reload(); // Refresh the page
-            }, 3000);
         }
-    }">
+        this.errorMessage = ''; // Clear error if all validations pass
+        return true;
+    },
+    handleSuccess() {
+        this.successMessage = 'File uploaded successfully!';
+        this.errorMessage = '';
+        this.showModal = false;
 
+        // Auto-hide the success message after 3 seconds
+        setTimeout(() => {
+            this.successMessage = '';
+            window.location.reload(); // Refresh the page
+        }, 3000);
+    }
+}">
+<!-- Header with Button -->
+        <x-slot name="header">
+            <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+                {{ __('Teach') }}
+            </h2>
+           
+        </x-slot>
+
+        
         <!-- Message Section -->
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8">
             <div x-show="errorMessage || successMessage" class="bg-red-200 p-4 rounded shadow-md mb-4 text-center">
@@ -96,6 +99,7 @@
                 </table>
             </div>
         </div>
+        
 
         <!-- Modal for Proof Upload -->
         <div x-show="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
@@ -292,7 +296,7 @@
 
 <!-- Reject Button -->
 <button 
-    class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 mt-8"
+    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
     @click="showRejectModal = true; selectedRequestId = {{ $request->id }}"
 >
     Reject

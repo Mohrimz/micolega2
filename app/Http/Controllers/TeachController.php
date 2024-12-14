@@ -48,34 +48,7 @@ class TeachController extends Controller
         return view('teach', compact('skills', 'sessionRequests', 'approvedSkills', 'rejectedSkills'));
     }
 
-    /**
-     * Handle the submission of proof documents for a skill request.
-     */
-    public function submitSkillRequest(Request $request)
-{
-    $request->validate([
-        'proof.*' => 'required|file|mimes:pdf,jpg,png|max:2048',
-        'skill_id' => 'required|exists:skills,id', // Validate single skill_id
-    ]);
-
-    $skillRequest = SkillRequest::create([
-        'user_id' => Auth::id(),
-    ]);
-
-    if ($request->hasFile('proof')) {
-        foreach ($request->file('proof') as $file) {
-            $path = $file->store('proof_documents');
-            ProofDocument::create([
-                'user_id' => Auth::id(),
-                'skill_id' => $request->skill_id,
-                'document_path' => $path,
-                'skill_request_id' => $skillRequest->id,
-            ]);
-        }
-    }
-
-    return redirect()->route('teach')->with('success', 'Proof documents submitted successfully!');
-}
+    /**p
 
 
     /**

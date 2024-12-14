@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('proof_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Links to the users table
-    $table->foreignId('skill_id')->constrained()->onDelete('cascade'); // Links to the skills table
-    $table->string('document_path'); // Path to the stored document
-    $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // Status of the document
+            $table->foreignId('skill_id')->constrained()->onDelete('cascade'); // Links to the skills table
+            $table->string('document_path'); // Path to the stored document
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // Status of the document
+            $table->text('notes')->nullable(); // Notes for additional information
+            $table->foreignId('skill_request_id')->nullable()->constrained()->onDelete('cascade'); // Links to skill requests table
+            $table->text('rejection_reason')->nullable(); // Reason for rejection
             $table->timestamps();
         });
     }

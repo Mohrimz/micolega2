@@ -11,34 +11,30 @@
                 </div>
 
                <!-- Navigation Links -->
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-    <!-- Dashboard Link -->
+               <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+    <!-- Dashboard Link (Visible to All) -->
     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-white font-bold">
         {{ __('Dashboard') }}
     </x-nav-link>
 
-    <!-- Teach Link (For Tutors) -->
-    @if(auth()->user()->hasRole('peer-tutor'))
+    <!-- Other Links (Visible to Non-Admin Users Only) -->
+    @if(!auth()->user()->hasRole('admin'))
+        <!-- Teach Link -->
         <x-nav-link href="{{ route('teach') }}" :active="request()->routeIs('teach')" class="text-white font-bold">
             {{ __('Teach') }}
         </x-nav-link>
+        
+        <!-- Sessions Link -->
+        <x-nav-link href="{{ route('sessions.index') }}" :active="request()->routeIs('sessions.*')" class="text-white font-bold">
+            {{ __('Sessions') }}
+        </x-nav-link>
+        
+        <!-- Group Sessions Link -->
+        <x-nav-link href="{{ route('group-sessions') }}" :active="request()->routeIs('group-sessions')" class="text-white font-bold">
+            {{ __('Group Sessions') }}
+        </x-nav-link>
     @endif
-
-    <!-- Sessions Link -->
-     <x-nav-link href="{{ route('sessions.index') }}" :active="request()->routeIs('sessions.*')" class="text-white font-bold">
-    {{ __('Sessions') }}
-    </x-nav-link>
-    <!-- Group Sessions Link -->
-    <x-nav-link href="{{ route('group-sessions') }}" :active="request()->routeIs('group-sessions')" class="text-white font-bold">
-        {{ __('Group Sessions') }}
-    </x-nav-link>
-    
-
 </div>
-
-
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <!-- Settings Dropdown -->
                 <div class="ms-3 relative text-black-800">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
