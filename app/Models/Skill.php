@@ -21,6 +21,7 @@ class Skill extends Model
         'name',
         'description',
         'category_id',
+        'level'
     ];
 
     /**
