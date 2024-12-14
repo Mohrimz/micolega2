@@ -9,11 +9,13 @@ class ProofDocument extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'skill_id',
-        'document_path',
-        'status',
-        'skill_request_id',
+    'user_id',
+    'skill_id',
+    'document_path',
+    'status',
+    'skill_request_id',
+    'notes', 
+    'rejection_reason',
     ];
 
     public function user()
@@ -29,5 +31,10 @@ class ProofDocument extends Model
 {
     return $this->belongsTo(SkillRequest::class);
 }
+
+
+  
+   
+
 
 }
