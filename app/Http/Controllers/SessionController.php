@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SessionRequest;
+use App\Models\Skill;
+use App\Models\GroupCourse;
+
 
 class SessionController extends Controller
 {
@@ -69,5 +72,34 @@ class SessionController extends Controller
 
         // Redirect back to the sessions page with a success message
         return redirect()->route('sessions.index')->with('success', 'Session cancelled successfully.');
+    }
+     /**
+     * Display the filtered group courses based on skill and level.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function filterGroupCourses(Request $request)
+    {
+        // Fetch all skills for the filter dropdown
+        $skills = Skill::all();
+
+        // Base query for group courses
+        $query = GroupCourse::query();
+
+        // Apply filters if they are provided
+        if ($request->has('skill_id') && $request->skill_id) {
+            $query->where('skill_id', $request->skill_id);
+        }
+
+        if ($request->has('level') && $request->level) {
+            $query->where('level', $request->level);
+        }
+
+        // Fetch filtered or all group courses
+        $groupCourses = $query->with(['skill', 'creator'])->get();
+
+        // Return the view with the filtered group courses
+        return view('group_sessions.index', compact('groupCourses', 'skills'));
     }
 }
