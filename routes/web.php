@@ -94,8 +94,8 @@ Route::post('/submit-skill-request', [TeachController::class, 'submitSkillReques
 
     Route::post('/admin/proof/reject', [AdminController::class, 'rejectProof'])->name('admin.proof.reject');
 
-Route::get('/admin/proof-document/view/{id}', [AdminController::class, 'viewDocument'])->name('admin.view.document');
-// Route to display the Teach page with rejected skills
+    Route::get('/admin/view-document/{id}', [AdminController::class, 'viewDocument'])->name('admin.view.document');
+    // Route to display the Teach page with rejected skills
 Route::get('/teach', [TeachController::class, 'index'])->name('teach');
 
 // Route to handle the update of proof document status (approve/reject)

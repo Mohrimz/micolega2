@@ -61,6 +61,29 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Proof document status updated successfully.');
     }
     //view document
+    public function viewDocument($id)
+{
+    // Find the proof document by ID
+    $proofDocument = ProofDocument::findOrFail($id);
+
+    // Explicitly specify the storage disk
+    $disk = Storage::disk('public');
+
+    // Debugging information for verification (remove in production)
+    // dd(
+    //     $disk->exists($proofDocument->document_path), 
+    //     $proofDocument->document_path, 
+    //     $disk->path($proofDocument->document_path)
+    // );
+
+    // Ensure the document exists in the 'public' disk
+    if (!$disk->exists($proofDocument->document_path)) {
+        return redirect()->back()->with('error', 'Document not found.');
+    }
+
+    // Return the document for viewing or download
+    return $disk->response($proofDocument->document_path);
+}
     
     // Handle the form submission to add a new skill
     public function store(Request $request)
