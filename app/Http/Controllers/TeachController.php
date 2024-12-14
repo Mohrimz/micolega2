@@ -112,40 +112,30 @@ class TeachController extends Controller
 
         return redirect()->route('teach')->with('success', 'Session request updated successfully.');
     }
-    /**
- * Submit a skill request along with proof documents.
- */
-public function submitSkillRequest(Request $request)
+    public function submitSkillRequest(Request $request)
 {
+    // Validate the input data
     $request->validate([
-        'skill_id' => 'required|exists:skills,id',
-        'proof_documents.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        'proof' => 'required|array', // Ensure the 'proof' field is an array
+        'proof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048', // Validate each file
+        'skill_id' => 'required|exists:skills,id', // Validate the skill_id exists in the skills table
     ]);
 
-    $user = Auth::user();
-
-    // Create a new SkillRequest
-    $skillRequest = SkillRequest::create([
-        'user_id' => $user->id,
-        'status' => 'pending',
-    ]);
-
-    // Handle the uploaded proof documents
-    foreach ($request->file('proof_documents') as $file) {
+    // Process each uploaded file
+    foreach ($request->file('proof') as $file) {
+        // Store the file in the 'proof_documents' directory
         $filePath = $file->store('proof_documents', 'public');
 
+        // Save the file information in the database
         ProofDocument::create([
-            'user_id' => $user->id,
-            'skill_id' => $request->input('skill_id'),
-            'document_path' => $filePath,
-            'status' => 'pending',
-            'skill_request_id' => $skillRequest->id,
-            'notes' => null, // Explicitly set to null
-            'rejection_reason' => null, // Explicitly set to null
+            'user_id' => Auth::id(), // ID of the logged-in user
+            'skill_id' => $request->skill_id, // Skill ID from the form
+            'document_path' => $filePath, // Path to the uploaded file
+            'status' => 'pending', // Default status
         ]);
     }
 
-    return redirect()->back()->with('success', 'Your skill request has been submitted successfully!');
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Proof documents uploaded successfully!');
 }
-
 }
