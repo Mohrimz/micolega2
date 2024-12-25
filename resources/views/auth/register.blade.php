@@ -62,19 +62,42 @@
             </div>
 
             <!-- Skills -->
-            <div class="mb-4">
-                <label class="text-sm font-medium text-gray-700">{{ __('Select Skills') }}</label>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                    @foreach ($skills as $skill)
+<!-- Skills -->
+<div class="mb-4">
+    <label class="text-sm font-medium text-gray-700">{{ __('Select Skills and Preferences') }}</label>
+    <div class="grid grid-cols-1 gap-4 mt-2">
+        @foreach ($skills as $skill)
+            <div class="flex flex-col gap-2">
+                <!-- Skill Checkbox -->
+                <label class="flex items-center text-sm">
+                    <input type="checkbox" 
+                           name="skills[{{ $skill->id }}][id]" 
+                           value="{{ $skill->id }}" 
+                           class="mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                           {{ old("skills.{$skill->id}.id") ? 'checked' : '' }}
+                           onchange="togglePreferences(this, {{ $skill->id }})">
+                    {{ $skill->name }}
+                </label>
+
+                <!-- Preferences Radio Buttons -->
+                <div class="ml-6 space-y-2" id="preferences-{{ $skill->id }}" style="display: {{ old("skills.{$skill->id}.id") ? 'block' : 'none' }}">
+                    @foreach ($preferences as $preference)
                         <label class="flex items-center text-sm">
-                            <input type="checkbox" name="skills[]" value="{{ $skill->id }}" 
-                                class="mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
-                                {{ in_array($skill->id, old('skills', [])) ? 'checked' : '' }}>
-                            {{ $skill->name }}
+                            <input type="radio" 
+                                   name="skills[{{ $skill->id }}][preference_id]" 
+                                   value="{{ $preference->id }}" 
+                                   class="mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                   {{ old("skills.{$skill->id}.preference_id") == $preference->id ? 'checked' : '' }}
+                                   {{ !old("skills.{$skill->id}.id") ? 'disabled' : '' }}>
+                            {{ $preference->name }}
                         </label>
                     @endforeach
                 </div>
             </div>
+        @endforeach
+    </div>
+</div>
+
 
             <!-- Select Time -->
             <div class="mb-4">
@@ -138,4 +161,21 @@
             </div>
         </form>
     </div>
+    <script>
+        function togglePreferences(checkbox, skillId) {
+            const preferencesDiv = document.getElementById(`preferences-${skillId}`);
+            const radios = preferencesDiv.querySelectorAll('input[type="radio"]');
+            if (checkbox.checked) {
+                preferencesDiv.style.display = 'block';
+                radios.forEach(radio => radio.disabled = false);
+            } else {
+                preferencesDiv.style.display = 'none';
+                radios.forEach(radio => {
+                    radio.checked = false; // Uncheck any selected radio buttons
+                    radio.disabled = true;
+                });
+            }
+        }
+    </script>
+    
 </x-guest-layout>
