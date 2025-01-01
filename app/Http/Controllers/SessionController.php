@@ -82,6 +82,8 @@ class SessionController extends Controller
      */
     public function showGroupSessions(Request $request)
 {
+    $userId = auth()->id(); // Get the logged-in user's ID
+
     // Fetch all skills for the filter dropdown
     $skills = Skill::all();
 
@@ -100,11 +102,18 @@ class SessionController extends Controller
     // Fetch filtered or all group courses
     $groupCourses = $query->with(['skill', 'creator'])->get();
 
-    // Fetch student availabilities
+    // Get the approved skills for the logged-in user from the proof_documents table
+    $approvedSkillIds = DB::table('proof_documents')
+        ->where('user_id', $userId)
+        ->where('status', 'approved')
+        ->pluck('skill_id');
+
+    // Fetch student availabilities filtered by approved skills
     $studentAvailabilities = DB::table('availabilities')
         ->join('availability_user', 'availabilities.id', '=', 'availability_user.availability_id')
         ->join('skill_user', 'availability_user.user_id', '=', 'skill_user.user_id')
         ->join('skills', 'skill_user.skill_id', '=', 'skills.id')
+        ->whereIn('skills.id', $approvedSkillIds) // Filter by approved skill IDs
         ->select(
             'skills.name as skill_name',
             'availabilities.date',
@@ -116,7 +125,7 @@ class SessionController extends Controller
         ->orderBy('availabilities.time')
         ->get();
 
-    // Return the view with both group courses and student availabilities
+    // Return the view with group courses, skills, and student availabilities
     return view('group_sessions.index', compact('groupCourses', 'skills', 'studentAvailabilities'));
 }
 
