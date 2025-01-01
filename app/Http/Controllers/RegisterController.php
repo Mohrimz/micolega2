@@ -35,9 +35,10 @@ class RegisterController extends Controller
 
     // Handle the registration request
    // Handle the registration request
-public function store(Request $request)
+   public function store(Request $request)
 {
     $validated = $request->validate([
+        // Validation rules
         'name' => ['required', 'string', 'max:255'],
         'email' => [
             'required',
@@ -46,9 +47,8 @@ public function store(Request $request)
             'max:255',
             'unique:users',
             function ($attribute, $value, $fail) {
-                $allowedEmail = 'admin@apiit.lk'; // Admin email address
+                $allowedEmail = 'admin@apiit.lk';
                 $domain = 'students.apiit.lk';
-                
                 if ($value !== $allowedEmail && !str_ends_with($value, "@$domain")) {
                     $fail("The $attribute must be an email address with the domain $domain.");
                 }

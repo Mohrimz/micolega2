@@ -100,36 +100,45 @@
 
 
             <!-- Select Time -->
-            <div class="mb-4">
-                <h2 class="text-sm font-medium text-gray-700 mb-2">{{ __('Select Available Times') }}</h2>
-                <table class="min-w-full text-sm table-auto border border-gray-300 rounded-lg shadow-sm">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="px-2 py-1 border border-gray-300">{{ __('Day') }}</th>
-                            @foreach($timeSlots as $timeSlot)
-                                <th class="px-2 py-1 border border-gray-300">{{ $timeSlot }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($availabilities->groupBy('date') as $date => $availabilityGroup)
-                            <tr class="text-center">
-                                <td class="px-2 py-1 border border-gray-300">{{ $date }}</td>
-                                @foreach($timeSlots as $timeSlot)
-                                    <td class="px-2 py-1 border border-gray-300">
-                                        <input 
-                                            type="checkbox" 
-                                            name="availabilities[]" 
-                                            value="{{ $availabilityGroup->first()->id }}" 
-                                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
-                                            {{ old('availabilities') && in_array($availabilityGroup->first()->id, old('availabilities')) ? 'checked' : '' }}>
-                                    </td>
-                                @endforeach
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+<div class="mb-4">
+    <h2 class="text-sm font-medium text-gray-700 mb-2">{{ __('Select Available Times') }}</h2>
+    <table class="min-w-full text-sm table-auto border border-gray-300 rounded-lg shadow-sm">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="px-2 py-1 border border-gray-300">{{ __('Day') }}</th>
+                @foreach($timeSlots as $timeSlot)
+                    <th class="px-2 py-1 border border-gray-300">{{ $timeSlot }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($availabilities->groupBy('date') as $date => $availabilityGroup)
+                <tr class="text-center">
+                    <td class="px-2 py-1 border border-gray-300">{{ $date }}</td>
+                    @foreach($timeSlots as $timeSlot)
+                        @php
+                            // Find the specific availability for this date and time
+                            $matchingAvailability = $availabilityGroup->firstWhere('time', "$timeSlot:00");
+                        @endphp
+                        <td class="px-2 py-1 border border-gray-300">
+                            @if($matchingAvailability)
+                                <input 
+                                    type="checkbox" 
+                                    name="availabilities[]" 
+                                    value="{{ $matchingAvailability->id }}" 
+                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                                    {{ old('availabilities') && in_array($matchingAvailability->id, old('availabilities')) ? 'checked' : '' }}>
+                            @else
+                                <span class="text-gray-400">—</span> <!-- Placeholder for unavailable slots -->
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
 
             <!-- Terms and Privacy -->
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
