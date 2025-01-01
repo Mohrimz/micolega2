@@ -68,6 +68,36 @@
                 </div>
             @endif
         </div>
+        <!-- Student Availability -->
+<div class="container mx-auto mt-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Student Availability</h2>
+    @if($studentAvailabilities->isEmpty())
+    <p class="text-gray-600 text-center">No student availabilities found.</p>
+@else
+    <table class="table-auto w-full border border-gray-300 rounded-lg shadow-sm">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2 border">Skill</th>
+                <th class="px-4 py-2 border">Date</th>
+                <th class="px-4 py-2 border">Time</th>
+                <th class="px-4 py-2 border">Student Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($studentAvailabilities as $availability)
+                <tr>
+                    <td class="px-4 py-2 border">{{ $availability->skill_name }}</td>
+                    <td class="px-4 py-2 border">{{ $availability->date }}</td>
+                    <td class="px-4 py-2 border">{{ $availability->time }}</td>
+                    <td class="px-4 py-2 border">{{ $availability->student_count }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
+
+</div>
+
 
         <!-- Modal for Create Group Course -->
         <div 

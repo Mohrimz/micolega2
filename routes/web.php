@@ -119,3 +119,7 @@ Route::post('/group-courses', [GroupCourseController::class, 'store'])->name('gr
 Route::get('/group-sessions/accepted', [GroupCourseController::class, 'acceptedSessions'])->name('group-sessions.accepted');
 Route::get('/join-session/{id}', [GroupCourseController::class, 'joinSession'])->name('join.session');
 Route::get('/group-sessions/filter', [SessionController::class, 'filterGroupCourses'])->name('group-sessions.filter');
+Route::get('/group-sessions', [SessionController::class, 'showGroupSessions'])->name('group-sessions.index');
+
+// Add this in your routes/web.php file
+Route::get('/group-sessions', [SessionController::class, 'showGroupSessions'])->name('group-sessions');
