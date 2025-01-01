@@ -113,4 +113,11 @@ class User extends Authenticatable
         return $this->hasMany(ProofDocument::class);
     }
     
+    public function requestedSkills()
+{
+    return $this->belongsToMany(RequestedSkill::class, 'user_request_skills')
+                ->withTimestamps()
+                ->withPivot('id');
+}
+
 }
