@@ -14,5 +14,10 @@ class Category extends Model
     {
         return $this->hasMany(Skill::class); 
     }
+    public function requestedSkills()
+{
+    return $this->hasMany(RequestedSkill::class);
+}
+
 }
 
