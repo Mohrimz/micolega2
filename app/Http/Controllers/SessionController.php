@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SessionRequest;
 use App\Models\Skill;
 use App\Models\GroupCourse;
+use Illuminate\Support\Facades\DB;
 
 
 class SessionController extends Controller
@@ -79,27 +80,54 @@ class SessionController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function filterGroupCourses(Request $request)
-    {
-        // Fetch all skills for the filter dropdown
-        $skills = Skill::all();
+    public function showGroupSessions(Request $request)
+{
+    $userId = auth()->id(); // Get the logged-in user's ID
 
-        // Base query for group courses
-        $query = GroupCourse::query();
+    // Fetch all skills for the filter dropdown
+    $skills = Skill::all();
 
-        // Apply filters if they are provided
-        if ($request->has('skill_id') && $request->skill_id) {
-            $query->where('skill_id', $request->skill_id);
-        }
+    // Base query for group courses
+    $query = GroupCourse::query();
 
-        if ($request->has('level') && $request->level) {
-            $query->where('level', $request->level);
-        }
-
-        // Fetch filtered or all group courses
-        $groupCourses = $query->with(['skill', 'creator'])->get();
-
-        // Return the view with the filtered group courses
-        return view('group_sessions.index', compact('groupCourses', 'skills'));
+    // Apply filters if they are provided
+    if ($request->has('skill_id') && $request->skill_id) {
+        $query->where('skill_id', $request->skill_id);
     }
+
+    if ($request->has('level') && $request->level) {
+        $query->where('level', $request->level);
+    }
+
+    // Fetch filtered or all group courses
+    $groupCourses = $query->with(['skill', 'creator'])->get();
+
+    // Get the approved skills for the logged-in user from the proof_documents table
+    $approvedSkillIds = DB::table('proof_documents')
+        ->where('user_id', $userId)
+        ->where('status', 'approved')
+        ->pluck('skill_id');
+
+    // Fetch student availabilities filtered by approved skills
+    $studentAvailabilities = DB::table('availabilities')
+        ->join('availability_user', 'availabilities.id', '=', 'availability_user.availability_id')
+        ->join('skill_user', 'availability_user.user_id', '=', 'skill_user.user_id')
+        ->join('skills', 'skill_user.skill_id', '=', 'skills.id')
+        ->whereIn('skills.id', $approvedSkillIds) // Filter by approved skill IDs
+        ->select(
+            'skills.name as skill_name',
+            'availabilities.date',
+            'availabilities.time',
+            DB::raw('COUNT(availability_user.user_id) as student_count')
+        )
+        ->groupBy('skills.name', 'availabilities.date', 'availabilities.time')
+        ->orderBy('availabilities.date')
+        ->orderBy('availabilities.time')
+        ->get();
+
+    // Return the view with group courses, skills, and student availabilities
+    return view('group_sessions.index', compact('groupCourses', 'skills', 'studentAvailabilities'));
+}
+
+
 }
