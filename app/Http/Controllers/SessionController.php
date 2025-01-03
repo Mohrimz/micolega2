@@ -83,32 +83,39 @@ class SessionController extends Controller
     public function showGroupSessions(Request $request)
     {
         $userId = auth()->id(); // Get the logged-in user's ID
-    
+        $currentDateTime = now();
+
         // Fetch all skills for the filter dropdown
         $skills = Skill::all();
-        $currentDateTime = now();
-    
+
         // Base query for group courses
         $query = GroupCourse::query();
-    
+
         // Apply filters if they are provided
         if ($request->has('skill_id') && $request->skill_id) {
             $query->where('skill_id', $request->skill_id);
         }
-    
+
         if ($request->has('level') && $request->level) {
             $query->where('level', $request->level);
         }
-    
+
         // Fetch filtered or all group courses
-        $groupCourses = $query->with(['skill', 'creator'])->get();
-    
+        $groupCourses = $query->with(['skill', 'creator', 'users'])->get();
+
+        // For students, fetch rejected sessions where they were enrolled
+        foreach ($groupCourses as $course) {
+            if ($course->status === 'removed') {
+                $course->visibleToStudent = $course->users->contains($userId); // Mark if the course is visible to the current student
+            }
+        }
+
         // Get the approved skills for the logged-in user from the proof_documents table
         $approvedSkillIds = DB::table('proof_documents')
             ->where('user_id', $userId)
             ->where('status', 'approved')
             ->pluck('skill_id');
-    
+
         // Fetch student availabilities filtered by approved skills
         $studentAvailabilities = DB::table('availabilities')
             ->join('availability_user', 'availabilities.id', '=', 'availability_user.availability_id')
@@ -125,33 +132,32 @@ class SessionController extends Controller
             ->orderBy('availabilities.date')
             ->orderBy('availabilities.time')
             ->get();
-    
+
         // Return the view with group courses, skills, approvedSkillIds, and student availabilities
         return view('group_sessions.index', compact('groupCourses', 'skills', 'studentAvailabilities', 'approvedSkillIds'));
     }
+
     public function removeSession(Request $request, $id)
-{
-    $groupCourse = GroupCourse::findOrFail($id);
+    {
+        $groupCourse = GroupCourse::findOrFail($id);
 
-    // Ensure only the creator can cancel the session
-    if (auth()->id() !== $groupCourse->created_by) {
-        abort(403, 'Unauthorized action.');
+        // Ensure only the creator can cancel the session
+        if (auth()->id() !== $groupCourse->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Validate the rejection reason
+        $request->validate([
+            'reject_reason' => 'required|string|max:255',
+        ]);
+
+        // Save the rejection reason and mark the session as removed
+        $groupCourse->reject_reason = $request->input('reject_reason');
+        $groupCourse->status = 'removed'; // Update the status to 'removed'
+        $groupCourse->save();
+
+        return redirect()->route('group-sessions')->with('success', 'Session removed successfully with a reason.');
     }
-
-    // Validate the rejection reason
-    $request->validate([
-        'reject_reason' => 'required|string|max:255',
-    ]);
-
-    // Save the rejection reason before deleting
-    $groupCourse->reject_reason = $request->input('reject_reason');
-    $groupCourse->save();
-
-    // Delete the group course
-    $groupCourse->delete();
-
-    return redirect()->route('group-sessions')->with('success', 'Session removed successfully with a reason.');
-}
 public function enroll(Request $request, $id)
 {
     $groupCourse = GroupCourse::findOrFail($id);
