@@ -46,44 +46,106 @@
         </div>
 
         <!-- Courses List -->
-<div class="container mx-auto mt-6">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Available Group Courses</h2>
-    @if($groupCourses->isEmpty())
-        <p class="text-gray-600 text-center">No group courses available for the selected filters.</p>
-    @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($groupCourses as $course)
-                <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-gray-50 hover:bg-gray-100 transition duration-200">
-                    <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $course->skill->name ?? 'Skill Not Found' }}</h4>
-                    <p class="text-gray-700"><strong>Tutor:</strong> {{ $course->creator->name ?? 'Unknown' }}</p>
-                    <p class="text-gray-700"><strong>Level:</strong> {{ $course->level }}</p>
-                    <p class="text-gray-700"><strong>Date:</strong> {{ $course->date }}</p>
-                    <p class="text-gray-700"><strong>Time:</strong> {{ $course->time }}</p>
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-4">Available Group Courses</h1>
 
-                    <!-- Join Session Button -->
-                    <a href="{{ route('join.session', $course->id) }}" 
-                       class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full text-center inline-block">
-                        Join Session
-                    </a>
+            @if($groupCourses->isEmpty())
+                <p class="text-gray-600 text-center">No group courses available for the selected filters.</p>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($groupCourses as $course)
+                        <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-gray-50 hover:bg-gray-100 transition duration-200">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $course->skill->name ?? 'Skill Not Found' }}</h4>
+                            <p class="text-gray-700"><strong>Tutor:</strong> {{ $course->creator->name ?? 'Unknown' }}</p>
+                            <p class="text-gray-700"><strong>Level:</strong> {{ $course->level }}</p>
+                            <p class="text-gray-700"><strong>Date:</strong> {{ $course->date }}</p>
+                            <p class="text-gray-700"><strong>Time:</strong> {{ $course->time }}</p>
 
-                    <!-- Cancel Session Button (Visible only to the creator) -->
-                    <!-- Cancel Session Button (Visible only to the creator) -->
-@if(auth()->id() === $course->creator->id)
-    <form action="{{ route('remove.session', $course->id) }}" method="POST" class="mt-2">
-        @csrf
-        @method('DELETE')
-        <button type="submit" 
-                class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 w-full text-center inline-block">
-            Remove Session
-        </button>
-    </form>
-@endif
+                            <!-- Enrollment Count for Tutors -->
+                            @if(auth()->id() === $course->creator->id)
+                                <p class="text-gray-700 mt-4"><strong>Enrollment:</strong> {{ $course->users->count() }}</p>
+                            @endif
 
+                            <!-- Enroll/Exclude Button for Students -->
+                            @if(auth()->id() !== $course->creator->id)
+                                <form action="{{ route('enroll.session', $course->id) }}" method="POST" class="mt-4">
+                                    @csrf
+                                    @if($course->users->contains(auth()->id()))
+                                        <button type="submit" 
+                                                class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 w-full">
+                                            Exclude
+                                        </button>
+                                    @else
+                                        <button type="submit" 
+                                                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full">
+                                            Enroll
+                                        </button>
+                                    @endif
+                                </form>
+                            @endif
+
+                            <!-- Join Session Button -->
+                            @if(auth()->id() === $course->creator->id || $course->users->contains(auth()->id()))
+                                <a href="{{ route('join.session', $course->id) }}" 
+                                   class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full text-center inline-block">
+                                    Join Session
+                                </a>
+                            @else
+                                <button disabled
+                                        class="mt-4 bg-gray-500 text-white px-4 py-2 rounded-md cursor-not-allowed w-full text-center inline-block">
+                                    Join Session
+                                </button>
+                            @endif
+
+                            <!-- Cancel Session Button (Modal Trigger for Creator Only) -->
+                            @if(auth()->id() === $course->creator->id)
+                                <div x-data="{ showModal: false, rejectReason: '' }">
+                                    <button @click="showModal = true" 
+                                            class="mt-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 w-full">
+                                        Remove Session
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div x-show="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+                                        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                                            <h2 class="text-xl font-bold mb-4">Enter Rejection Reason</h2>
+                                            <form method="POST" action="{{ route('remove.session', $course->id) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <div class="mb-4">
+                                                    <label for="reject_reason" class="block text-sm font-medium text-gray-700">Reason</label>
+                                                    <textarea name="reject_reason" id="reject_reason" rows="3" required
+                                                              x-model="rejectReason"
+                                                              class="mt-2 p-2 w-full border border-gray-300 rounded-md"></textarea>
+                                                </div>
+                                                <div class="flex justify-end space-x-4">
+                                                    <button type="button" 
+                                                            @click="showModal = false" 
+                                                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit" 
+                                                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                                                            :disabled="!rejectReason">
+                                                        Confirm
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            @endif
         </div>
-    @endif
+    </div>
 </div>
+
+
 
         <!-- Student Availability -->
 <!-- Student Availability Section -->

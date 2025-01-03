@@ -125,3 +125,6 @@ Route::get('/group-sessions', [SessionController::class, 'showGroupSessions'])->
 Route::get('/group-sessions', [SessionController::class, 'showGroupSessions'])->name('group-sessions');
 Route::get('/group-sessions', [SessionController::class, 'showGroupSessions'])->name('group-sessions');
 Route::delete('/group-courses/{id}/remove', [SessionController::class, 'removeSession'])->name('remove.session');
+Route::post('/group-courses/{id}/enroll', [SessionController::class, 'enroll'])->name('enroll.session');
+Route::delete('/group-courses/{id}/remove', [SessionController::class, 'removeSession'])->name('remove.session');
+Route::delete('/group-sessions/{id}/remove', [SessionController::class, 'removeSession'])->name('remove.session');

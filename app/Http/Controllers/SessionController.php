@@ -129,19 +129,47 @@ class SessionController extends Controller
         // Return the view with group courses, skills, approvedSkillIds, and student availabilities
         return view('group_sessions.index', compact('groupCourses', 'skills', 'studentAvailabilities', 'approvedSkillIds'));
     }
-    public function removeSession($id)
+    public function removeSession(Request $request, $id)
 {
     $groupCourse = GroupCourse::findOrFail($id);
 
-    // Ensure only the creator can remove the session
+    // Ensure only the creator can cancel the session
     if (auth()->id() !== $groupCourse->created_by) {
         abort(403, 'Unauthorized action.');
     }
 
-    $groupCourse->delete(); // Cancel the session by deleting it (or update status if needed)
+    // Validate the rejection reason
+    $request->validate([
+        'reject_reason' => 'required|string|max:255',
+    ]);
 
-    return redirect()->route('group-sessions')->with('success', 'Session removed successfully.');
+    // Save the rejection reason before deleting
+    $groupCourse->reject_reason = $request->input('reject_reason');
+    $groupCourse->save();
+
+    // Delete the group course
+    $groupCourse->delete();
+
+    return redirect()->route('group-sessions')->with('success', 'Session removed successfully with a reason.');
 }
+public function enroll(Request $request, $id)
+{
+    $groupCourse = GroupCourse::findOrFail($id);
+    $userId = auth()->id();
+
+    if ($groupCourse->users()->where('user_id', $userId)->exists()) {
+        // Exclude the user
+        $groupCourse->users()->detach($userId);
+        return redirect()->back()->with('success', 'You have been excluded from the session.');
+    } else {
+        // Enroll the user
+        $groupCourse->users()->attach($userId);
+        return redirect()->back()->with('success', 'You have enrolled in the session.');
+    }
+}
+
+
+
 
     
 
