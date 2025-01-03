@@ -15,6 +15,7 @@ class PreferencesTableSeeder extends Seeder
         DB::table('preferences')->insert([
             ['name' => 'group-session', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'one-one session', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'both', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

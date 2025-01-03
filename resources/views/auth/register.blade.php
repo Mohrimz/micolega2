@@ -97,6 +97,52 @@
         @endforeach
     </div>
 </div>
+<div>
+    <label>Requested Skills</label>
+    <input type="checkbox" id="other" name="other" value="1">
+    <label for="other">Other</label>
+    
+    <div id="requested-skills" style="display: none;">
+        @foreach ($requested_skills as $requestedSkill)
+            @if ($requestedSkill->status == 'pending')
+                <div>
+                    <input type="checkbox" name="requested_skills[{{ $requestedSkill->id }}][id]" value="{{ $requestedSkill->id }}" id="requested-skill-{{ $requestedSkill->id }}">
+                    <label for="requested-skill-{{ $requestedSkill->id }}">{{ $requestedSkill->name }}</label>
+                    <select name="requested_skills[{{ $requestedSkill->id }}][preference_id]" required>
+                        <option value="" disabled selected>Select preference</option>
+                        @foreach ($preferences as $preference)
+                            <option value="{{ $preference->id }}">{{ $preference->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+        @endforeach
+
+        <div>
+            <label for="new_requested_skill">Add New Requested Skill</label>
+            <input type="text" id="new_requested_skill" name="new_requested_skill" placeholder="Enter new skill">
+        
+            <label for="new_requested_skill_preference_id">Select Preference</label>
+            <select name="new_requested_skill_preference_id">
+                <option value="" disabled selected>Select preference</option>
+                @foreach ($preferences as $preference)
+                    <option value="{{ $preference->id }}">{{ $preference->name }}</option>
+                @endforeach
+            </select>
+        
+            <label for="new_requested_skill_category_id">Select Category</label>
+            <select name="new_requested_skill_category_id" id="new_requested_skill_category_id">
+                <option value="" disabled selected>Select category</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        
+    </div>
+</div>
+
+
 
 
             <!-- Select Time -->
@@ -185,6 +231,12 @@
                 });
             }
         }
+    </script>
+    <script>
+        document.getElementById('other').addEventListener('change', function () {
+            const requestedSkillsDiv = document.getElementById('requested-skills');
+            requestedSkillsDiv.style.display = this.checked ? 'block' : 'none';
+        });
     </script>
     
 </x-guest-layout>

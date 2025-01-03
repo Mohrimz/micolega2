@@ -22,4 +22,10 @@ class RequestedSkill extends Model
                     ->withTimestamps()
                     ->withPivot('id');
     }
+    public function preferences()
+{
+    return $this->belongsToMany(Preference::class, 'user_request_skills')
+                ->withPivot('id');
+}
+
 }
