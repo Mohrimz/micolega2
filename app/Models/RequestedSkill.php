@@ -15,17 +15,4 @@ class RequestedSkill extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_request_skills')
-                    ->withTimestamps()
-                    ->withPivot('id');
-    }
-    public function preferences()
-{
-    return $this->belongsToMany(Preference::class, 'user_request_skills')
-                ->withPivot('id');
-}
-
 }

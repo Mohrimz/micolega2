@@ -15,7 +15,13 @@
     <!-- Dashboard Link (Visible to All) -->
     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-white font-bold">
         {{ __('Dashboard') }}
-    </x-nav-link>
+    </x-nav-link> 
+    <!-- 'lol' Link (Visible to Admin Only) -->
+                    @if(auth()->user()->hasRole('admin'))
+                        <x-nav-link href="{{ route('lol') }}" :active="request()->routeIs('lol')" class="text-white font-bold">
+                            {{ __('Requested Skills') }}
+                        </x-nav-link>
+                    @endif
 
     <!-- Other Links (Visible to Non-Admin Users Only) -->
     @if(!auth()->user()->hasRole('admin'))

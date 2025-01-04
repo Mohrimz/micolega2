@@ -16,6 +16,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentSessionController;
 use App\Http\Controllers\GroupCourseController;
+use App\Http\Controllers\SkillNameController;
 
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -84,6 +85,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/admin/pending-proof-documents', [AdminController::class, 'index'])->name('admin.pending.proof.documents');
     
         // Update the /teach route to use the TeachController
+        Route::get('/lol', function () {
+            return view('lol');
+        })->name('lol');
+        
         
         Route::get('/teach', [TeachController::class, 'index'])->name('teach');
 Route::put('/teach/session-requests/{id}', [TeachController::class, 'updateSessionRequestStatus'])->name('session-request.update');
@@ -128,3 +133,7 @@ Route::delete('/group-courses/{id}/remove', [SessionController::class, 'removeSe
 Route::post('/group-courses/{id}/enroll', [SessionController::class, 'enroll'])->name('enroll.session');
 Route::delete('/group-courses/{id}/remove', [SessionController::class, 'removeSession'])->name('remove.session');
 Route::delete('/group-sessions/{id}/remove', [SessionController::class, 'removeSession'])->name('remove.session');
+
+Route::get('/lol', [SkillNameController::class, 'index'])->name('lol');
+Route::post('/lol/accept/{id}', [SkillNameController::class, 'acceptSkill'])->name('skill.accept');
+Route::post('/lol/reject/{id}', [SkillNameController::class, 'rejectSkill'])->name('skill.reject');
