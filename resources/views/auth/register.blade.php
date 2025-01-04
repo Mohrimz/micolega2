@@ -57,134 +57,138 @@
                     <option value="">{{ __('Choose your level') }}</option>
                     <option value="L4" {{ old('level') === 'L4' ? 'selected' : '' }}>L4</option>
                     <option value="L5" {{ old('level') === 'L5' ? 'selected' : '' }}>L5</option>
-                   
                 </select>
             </div>
 
             <!-- Skills -->
-<!-- Skills -->
-<div class="mb-4">
-    <label class="text-sm font-medium text-gray-700">{{ __('Select Skills and Preferences') }}</label>
-    <div class="grid grid-cols-1 gap-4 mt-2">
-        @foreach ($skills as $skill)
-            <div class="flex flex-col gap-2">
-                <!-- Skill Checkbox -->
-                <label class="flex items-center text-sm">
-                    <input type="checkbox" 
-                           name="skills[{{ $skill->id }}][id]" 
-                           value="{{ $skill->id }}" 
-                           class="mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
-                           {{ old("skills.{$skill->id}.id") ? 'checked' : '' }}
-                           onchange="togglePreferences(this, {{ $skill->id }})">
-                    {{ $skill->name }}
-                </label>
+            <div class="mb-4">
+                <label class="text-sm font-medium text-gray-700">{{ __('Select Skills and Preferences') }}</label>
+                <div class="grid grid-cols-1 gap-4 mt-2">
+                    @foreach ($skills as $skill)
+                        <div class="flex flex-col gap-2">
+                            <!-- Skill Checkbox -->
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" 
+                                       name="skills[{{ $skill->id }}][id]" 
+                                       value="{{ $skill->id }}" 
+                                       class="mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                                       {{ old("skills.{$skill->id}.id") ? 'checked' : '' }}
+                                       onchange="togglePreferences(this, {{ $skill->id }})">
+                                {{ $skill->name }}
+                            </label>
 
-                <!-- Preferences Radio Buttons -->
-                <div class="ml-6 space-y-2" id="preferences-{{ $skill->id }}" style="display: {{ old("skills.{$skill->id}.id") ? 'block' : 'none' }}">
-                    @foreach ($preferences as $preference)
-                        <label class="flex items-center text-sm">
-                            <input type="radio" 
-                                   name="skills[{{ $skill->id }}][preference_id]" 
-                                   value="{{ $preference->id }}" 
-                                   class="mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                   {{ old("skills.{$skill->id}.preference_id") == $preference->id ? 'checked' : '' }}
-                                   {{ !old("skills.{$skill->id}.id") ? 'disabled' : '' }}>
-                            {{ $preference->name }}
-                        </label>
+                            <!-- Preferences Radio Buttons -->
+                            <div class="ml-6 space-y-2" id="preferences-{{ $skill->id }}" style="display: {{ old("skills.{$skill->id}.id") ? 'block' : 'none' }}">
+                                @foreach ($preferences as $preference)
+                                    <label class="flex items-center text-sm">
+                                        <input type="radio" 
+                                               name="skills[{{ $skill->id }}][preference_id]" 
+                                               value="{{ $preference->id }}" 
+                                               class="mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                               {{ old("skills.{$skill->id}.preference_id") == $preference->id ? 'checked' : '' }}
+                                               {{ !old("skills.{$skill->id}.id") ? 'disabled' : '' }}>
+                                        {{ $preference->name }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             </div>
-        @endforeach
-    </div>
-</div>
-<div>
-    <label>Requested Skills</label>
-    <input type="checkbox" id="other" name="other" value="1">
-    <label for="other">Other</label>
-    
-    <div id="requested-skills" style="display: none;">
-        @foreach ($requested_skills as $requestedSkill)
-            @if ($requestedSkill->status == 'pending')
-                <div>
-                    <input type="checkbox" name="requested_skills[{{ $requestedSkill->id }}][id]" value="{{ $requestedSkill->id }}" id="requested-skill-{{ $requestedSkill->id }}">
-                    <label for="requested-skill-{{ $requestedSkill->id }}">{{ $requestedSkill->name }}</label>
-                    <select name="requested_skills[{{ $requestedSkill->id }}][preference_id]" required>
-                        <option value="" disabled selected>Select preference</option>
-                        @foreach ($preferences as $preference)
-                            <option value="{{ $preference->id }}">{{ $preference->name }}</option>
-                        @endforeach
-                    </select>
+
+            <!-- Requested Skills -->
+            <div>
+                <label>Requested Skills</label>
+                <input type="checkbox" id="other" name="other" value="1">
+                <label for="other">Other</label>
+                
+                <div id="requested-skills" style="display: none;">
+                    @foreach ($requested_skills as $requestedSkill)
+                        @if ($requestedSkill->status == 'pending')
+                            <div>
+                                <!-- Skill Checkbox -->
+                                <input type="checkbox" 
+                                       name="requested_skills[{{ $requestedSkill->id }}][id]" 
+                                       value="{{ $requestedSkill->id }}" 
+                                       id="requested-skill-{{ $requestedSkill->id }}" 
+                                       class="requested-skill-checkbox"
+                                       onchange="toggleRequestedSkillPreference({{ $requestedSkill->id }})">
+                                <label for="requested-skill-{{ $requestedSkill->id }}">{{ $requestedSkill->name }}</label>
+        
+                                <!-- Preference Dropdown -->
+                                <select name="requested_skills[{{ $requestedSkill->id }}][preference_id]" 
+                                        id="requested-skill-preference-{{ $requestedSkill->id }}" 
+                                        class="requested-skill-preference"
+                                        disabled>
+                                    <option value="" disabled selected>Select preference</option>
+                                    @foreach ($preferences as $preference)
+                                        <option value="{{ $preference->id }}">{{ $preference->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
-            @endif
-        @endforeach
-
-        <div>
-            <label for="new_requested_skill">Add New Requested Skill</label>
-            <input type="text" id="new_requested_skill" name="new_requested_skill" placeholder="Enter new skill">
-        
-            <label for="new_requested_skill_preference_id">Select Preference</label>
-            <select name="new_requested_skill_preference_id">
-                <option value="" disabled selected>Select preference</option>
-                @foreach ($preferences as $preference)
-                    <option value="{{ $preference->id }}">{{ $preference->name }}</option>
-                @endforeach
-            </select>
-        
-            <label for="new_requested_skill_category_id">Select Category</label>
-            <select name="new_requested_skill_category_id" id="new_requested_skill_category_id">
-                <option value="" disabled selected>Select category</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        
-    </div>
-</div>
-
-
-
+                
+                <label for="new_requested_skill">Add New Requested Skill</label>
+                <input type="text" id="new_requested_skill" name="new_requested_skill" placeholder="Enter new skill">
+            
+                <label for="new_requested_skill_preference_id">Select Preference</label>
+                <select name="new_requested_skill_preference_id">
+                    <option value="" disabled selected>Select preference</option>
+                    @foreach ($preferences as $preference)
+                        <option value="{{ $preference->id }}">{{ $preference->name }}</option>
+                    @endforeach
+                </select>
+            
+                <label for="new_requested_skill_category_id" class="block text-gray-700 font-medium mb-2">Select Category</label>
+                <select name="new_requested_skill_category_id"  id="new_requested_skill_category_id">
+                    <option value="" disabled selected>Select category</option>
+                    @foreach ($categories as $category)
+                        <option  class="text-black" value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
             <!-- Select Time -->
-<div class="mb-4">
-    <h2 class="text-sm font-medium text-gray-700 mb-2">{{ __('Select Available Times') }}</h2>
-    <table class="min-w-full text-sm table-auto border border-gray-300 rounded-lg shadow-sm">
-        <thead>
-            <tr class="bg-gray-100">
-                <th class="px-2 py-1 border border-gray-300">{{ __('Day') }}</th>
-                @foreach($timeSlots as $timeSlot)
-                    <th class="px-2 py-1 border border-gray-300">{{ $timeSlot }}</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($availabilities->groupBy('date') as $date => $availabilityGroup)
-                <tr class="text-center">
-                    <td class="px-2 py-1 border border-gray-300">{{ $date }}</td>
-                    @foreach($timeSlots as $timeSlot)
-                        @php
-                            // Find the specific availability for this date and time
-                            $matchingAvailability = $availabilityGroup->firstWhere('time', "$timeSlot:00");
-                        @endphp
-                        <td class="px-2 py-1 border border-gray-300">
-                            @if($matchingAvailability)
-                                <input 
-                                    type="checkbox" 
-                                    name="availabilities[]" 
-                                    value="{{ $matchingAvailability->id }}" 
-                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
-                                    {{ old('availabilities') && in_array($matchingAvailability->id, old('availabilities')) ? 'checked' : '' }}>
-                            @else
-                                <span class="text-gray-400">—</span> <!-- Placeholder for unavailable slots -->
-                            @endif
-                        </td>
-                    @endforeach
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-
+            <div class="mb-4">
+                <h2 class="text-sm font-medium text-gray-700 mb-2">{{ __('Select Available Times') }}</h2>
+                <table class="min-w-full text-sm table-auto border border-gray-300 rounded-lg shadow-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-2 py-1 border border-gray-300">{{ __('Day') }}</th>
+                            @foreach($timeSlots as $timeSlot)
+                                <th class="px-2 py-1 border border-gray-300">{{ $timeSlot }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($availabilities->groupBy('date') as $date => $availabilityGroup)
+                            <tr class="text-center">
+                                <td class="px-2 py-1 border border-gray-300">{{ $date }}</td>
+                                @foreach($timeSlots as $timeSlot)
+                                    @php
+                                        // Find the specific availability for this date and time
+                                        $matchingAvailability = $availabilityGroup->firstWhere('time', "$timeSlot:00");
+                                    @endphp
+                                    <td class="px-2 py-1 border border-gray-300">
+                                        @if($matchingAvailability)
+                                            <input 
+                                                type="checkbox" 
+                                                name="availabilities[]" 
+                                                value="{{ $matchingAvailability->id }}" 
+                                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                                                {{ old('availabilities') && in_array($matchingAvailability->id, old('availabilities')) ? 'checked' : '' }}>
+                                        @else
+                                            <span class="text-gray-400">—</span> <!-- Placeholder for unavailable slots -->
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Terms and Privacy -->
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
@@ -216,6 +220,7 @@
             </div>
         </form>
     </div>
+
     <script>
         function togglePreferences(checkbox, skillId) {
             const preferencesDiv = document.getElementById(`preferences-${skillId}`);
@@ -226,17 +231,25 @@
             } else {
                 preferencesDiv.style.display = 'none';
                 radios.forEach(radio => {
-                    radio.checked = false; // Uncheck any selected radio buttons
-                    radio.disabled = true;
+                    radio.checked = false; // Uncheck radios
+                    radio.disabled = true; // Disable radios
                 });
             }
         }
-    </script>
-    <script>
-        document.getElementById('other').addEventListener('change', function () {
+
+        document.getElementById('other').addEventListener('change', function() {
             const requestedSkillsDiv = document.getElementById('requested-skills');
-            requestedSkillsDiv.style.display = this.checked ? 'block' : 'none';
+            if (this.checked) {
+                requestedSkillsDiv.style.display = 'block';
+            } else {
+                requestedSkillsDiv.style.display = 'none';
+            }
         });
+
+        function toggleRequestedSkillPreference(skillId) {
+            const checkbox = document.getElementById(`requested-skill-${skillId}`);
+            const preferenceSelect = document.getElementById(`requested-skill-preference-${skillId}`);
+            preferenceSelect.disabled = !checkbox.checked;
+        }
     </script>
-    
 </x-guest-layout>
