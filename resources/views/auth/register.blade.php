@@ -145,7 +145,7 @@
                 <select name="new_requested_skill_category_id"  id="new_requested_skill_category_id">
                     <option value="" disabled selected>Select category</option>
                     @foreach ($categories as $category)
-                        <option  class="text-black" value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option  class="text-black" value="{{ $category->id }}">{{ $category->category_name }}</option>
                     @endforeach
                 </select>
             </div>

@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserRequestSkill extends Model
 {
-    protected $fillable = ['user_id', 'skill_id', 'preference_id'];
+    protected $fillable = ['user_id', 'requested_skill_id', 'preference_id'];
 
     public function user()
     {
@@ -21,5 +22,9 @@ class UserRequestSkill extends Model
     public function preference()
     {
         return $this->belongsTo(Preference::class);
+    }
+    public function requestedSkill()
+    {
+        return $this->belongsTo(RequestedSkill::class, 'requested_skill_id');
     }
 }
