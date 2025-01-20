@@ -36,8 +36,9 @@
                                         </button>
 
                                         <!-- Reject Button -->
-                                        <form method="POST" action="{{ route('skill.reject', $skill->id) }}" class="d-inline-block">
+                                        <form method="POST" action="{{ route('skill.reject') }}" class="d-inline-block">
                                             @csrf
+                                            <input type="hidden" name="skill_id" value="{{ $skill->id }}">
                                             <button type="submit" class="btn btn-danger btn-sm">
                                                 Reject
                                             </button>
@@ -56,37 +57,44 @@
     <div class="modal fade" id="acceptModal" tabindex="-1" aria-labelledby="acceptModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <form method="POST" action="">
-    @csrf
-    <div class="modal-body">
-        <input type="hidden" id="skill_id" name="skill_id">
-        <div class="mb-3">
-            <label for="skill_name" class="form-label">Skill Name</label>
-            <input type="text" id="skill_name" class="form-control" readonly>
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </div>
-</form>
-
+                <form method="POST" action="{{ route('skill.accept') }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="acceptModalLabel">Add Description</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="skill_id" name="skill_id">
+                        <div class="mb-3">
+                            <label for="skill_name" class="form-label">Skill Name</label>
+                            <input type="text" id="skill_name" class="form-control" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</x-app-layout>
-<script>
-    const acceptModal = document.getElementById('acceptModal');
-    acceptModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const skillId = button.getAttribute('data-skill-id');
-        const form = acceptModal.querySelector('form');
 
-        // Set the correct action for the form
-        form.action = `/lol/accept/${skillId}`;
-    });
-</script>
+    <script>
+        const acceptModal = document.getElementById('acceptModal');
+        acceptModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const skillId = button.getAttribute('data-skill-id');
+            const skillName = button.getAttribute('data-skill-name');
+
+            const modalSkillId = acceptModal.querySelector('#skill_id');
+            const modalSkillName = acceptModal.querySelector('#skill_name');
+
+            modalSkillId.value = skillId;
+            modalSkillName.value = skillName;
+        });
+    </script>
+</x-app-layout>

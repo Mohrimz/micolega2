@@ -96,59 +96,85 @@
                 </div>
             </div>
 
-            <!-- Requested Skills -->
-            <div>
-                <label>Requested Skills</label>
-                <input type="checkbox" id="other" name="other" value="1">
-                <label for="other">Other</label>
-                
-                <div id="requested-skills" style="display: none;">
-                    @foreach ($requested_skills as $requestedSkill)
-                        @if ($requestedSkill->status == 'pending')
-                            <div>
-                                <!-- Skill Checkbox -->
-                                <input type="checkbox" 
-                                       name="requested_skills[{{ $requestedSkill->id }}][id]" 
-                                       value="{{ $requestedSkill->id }}" 
-                                       id="requested-skill-{{ $requestedSkill->id }}" 
-                                       class="requested-skill-checkbox"
-                                       onchange="toggleRequestedSkillPreference({{ $requestedSkill->id }})">
-                                <label for="requested-skill-{{ $requestedSkill->id }}">{{ $requestedSkill->name }}</label>
-        
-                                <!-- Preference Dropdown -->
-                                <select name="requested_skills[{{ $requestedSkill->id }}][preference_id]" 
-                                        id="requested-skill-preference-{{ $requestedSkill->id }}" 
-                                        class="requested-skill-preference"
-                                        disabled>
-                                    <option value="" disabled selected>Select preference</option>
-                                    @foreach ($preferences as $preference)
-                                        <option value="{{ $preference->id }}">{{ $preference->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-                    @endforeach
+          <!-- Requested Skills -->
+<div class="mb-6">
+    <h2 class="text-lg font-medium text-gray-700 mb-4">Requested Skills</h2>
+
+    <!-- Other Skills Checkbox -->
+    <div class="flex items-center mb-4">
+        <input type="checkbox" id="other" name="other" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+        <label for="other" class="ml-2 text-gray-700">Other</label>
+    </div>
+
+    <!-- Existing Requested Skills -->
+    <div id="requested-skills" class="space-y-4" style="display: none;">
+        @foreach ($requested_skills as $requestedSkill)
+            @if ($requestedSkill->status == 'pending')
+                <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
+                    <!-- Skill Checkbox -->
+                    <div class="flex items-center">
+                        <input type="checkbox" 
+                               name="requested_skills[{{ $requestedSkill->id }}][id]" 
+                               value="{{ $requestedSkill->id }}" 
+                               id="requested-skill-{{ $requestedSkill->id }}" 
+                               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
+                               onchange="toggleRequestedSkillPreference({{ $requestedSkill->id }})">
+                        <label for="requested-skill-{{ $requestedSkill->id }}" class="text-gray-700">{{ $requestedSkill->name }}</label>
+                    </div>
+
+                    <!-- Preference Dropdown -->
+                    <div class="mt-2">
+                        <label for="requested-skill-preference-{{ $requestedSkill->id }}" class="block text-sm font-medium text-gray-700">Select Preference</label>
+                        <select name="requested_skills[{{ $requestedSkill->id }}][preference_id]" 
+                                id="requested-skill-preference-{{ $requestedSkill->id }}" 
+                                class="block w-full mt-1 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                disabled>
+                            <option value="" disabled selected>Select preference</option>
+                            @foreach ($preferences as $preference)
+                                <option value="{{ $preference->id }}">{{ $preference->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                
-                <label for="new_requested_skill">Add New Requested Skill</label>
-                <input type="text" id="new_requested_skill" name="new_requested_skill" placeholder="Enter new skill">
-            
-                <label for="new_requested_skill_preference_id">Select Preference</label>
-                <select name="new_requested_skill_preference_id">
+            @endif
+        @endforeach
+    </div>
+
+    <!-- Add New Requested Skill -->
+    <div class="mt-6">
+        <h3 class="text-md font-medium text-gray-700 mb-2">Add New Requested Skill</h3>
+        <div class="space-y-4">
+            <div>
+                <label for="new_requested_skill" class="block text-sm font-medium text-gray-700">Enter New Skill</label>
+                <input type="text" id="new_requested_skill" name="new_requested_skill" placeholder="Enter new skill" 
+                       class="block w-full mt-1 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="new_requested_skill_preference_id" class="block text-sm font-medium text-gray-700">Select Preference</label>
+                <select name="new_requested_skill_preference_id" id="new_requested_skill_preference_id" 
+                        class="block w-full mt-1 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="" disabled selected>Select preference</option>
                     @foreach ($preferences as $preference)
                         <option value="{{ $preference->id }}">{{ $preference->name }}</option>
                     @endforeach
                 </select>
-            
-                <label for="new_requested_skill_category_id" class="block text-gray-700 font-medium mb-2">Select Category</label>
-                <select name="new_requested_skill_category_id"  id="new_requested_skill_category_id">
+            </div>
+
+            <div>
+                <label for="new_requested_skill_category_id" class="block text-sm font-medium text-gray-700">Select Category</label>
+                <select name="new_requested_skill_category_id" id="new_requested_skill_category_id" 
+                        class="block w-full mt-1 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="" disabled selected>Select category</option>
                     @foreach ($categories as $category)
-                        <option  class="text-black" value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                     @endforeach
                 </select>
             </div>
+        </div>
+    </div>
+</div>
+
 
             <!-- Select Time -->
             <div class="mb-4">

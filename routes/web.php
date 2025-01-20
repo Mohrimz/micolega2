@@ -137,3 +137,7 @@ Route::delete('/group-sessions/{id}/remove', [SessionController::class, 'removeS
 Route::get('/lol', [SkillNameController::class, 'index'])->name('lol');
 Route::post('/lol/accept/{id}', [SkillNameController::class, 'acceptSkill'])->name('skill.accept');
 Route::post('/lol/reject/{id}', [SkillNameController::class, 'rejectSkill'])->name('skill.reject');
+
+Route::get('/lol', [SkillNameController::class, 'showPendingSkills'])->name('lol');
+Route::post('/skill/accept', [SkillNameController::class, 'acceptSkill'])->name('skill.accept');
+Route::post('/skill/reject', [SkillNameController::class, 'rejectSkill'])->name('skill.reject');
