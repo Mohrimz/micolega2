@@ -109,7 +109,7 @@
                       @submit.prevent="if (validateFileType($refs.files.files)) { handleSuccess(); $el.submit(); } else { errorMessage = 'Please upload a valid file.' }">
                     @csrf
                     <div class="mb-6">
-                        <label for="proof" class="block text-sm font-medium text-gray-700">Proof Files</label>
+                        <label for="proof" class="block text-sm font-medium text-red-700"> Please upload certificates received from the relevant platform as proof</label>
                         <input type="file" name="proof[]" id="proof" class="mt-2 block w-full border border-gray-300 rounded-md p-2" multiple x-ref="files">
                     </div>
                     <!-- Pass selected skill ID as hidden input -->

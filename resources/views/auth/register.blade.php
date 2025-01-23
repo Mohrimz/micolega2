@@ -98,8 +98,7 @@
 
           <!-- Requested Skills -->
 <div class="mb-6">
-    <h2 class="text-lg font-medium text-gray-700 mb-4">Requested Skills</h2>
-
+   
     <!-- Other Skills Checkbox -->
     <div class="flex items-center mb-4">
         <input type="checkbox" id="other" name="other" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
