@@ -17,6 +17,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentSessionController;
 use App\Http\Controllers\GroupCourseController;
 use App\Http\Controllers\SkillNameController;
+use App\Http\Controllers\SkillRequestController;
 
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -141,3 +142,10 @@ Route::post('/lol/reject/{id}', [SkillNameController::class, 'rejectSkill'])->na
 Route::get('/lol', [SkillNameController::class, 'showPendingSkills'])->name('lol');
 Route::post('/skill/accept', [SkillNameController::class, 'acceptSkill'])->name('skill.accept');
 Route::post('/skill/reject', [SkillNameController::class, 'rejectSkill'])->name('skill.reject');
+
+
+Route::get('/tutor/skills', [SkillRequestController::class, 'index'])->name('tutor.skills');
+Route::post('/tutor/upload-proof', [SkillRequestController::class, 'uploadProof'])->name('tutor.uploadProof');
+Route::post('/admin/approve-skill/{id}', [SkillRequestController::class, 'approveSkill'])->name('admin.approveSkill');
+Route::post('/admin/reject-skill/{id}', [SkillRequestController::class, 'rejectSkill'])->name('admin.rejectSkill');
+Route::get('/admin/requested-skills', [SkillRequestController::class, 'adminSkills'])->name('admin.requestedSkills');

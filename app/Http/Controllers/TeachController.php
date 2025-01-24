@@ -6,6 +6,8 @@ use App\Models\Skill;
 use App\Models\SkillRequest;
 use App\Models\ProofDocument;
 use App\Models\SessionRequest;
+use App\Models\RequestedSkill;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,8 +48,10 @@ class TeachController extends Controller
             ->where('status', 'rejected')
             ->with(['skill']) // Eager load the associated skill
             ->get();
+        $requestedSkills = RequestedSkill::where('status', 'pending')->get();
 
-        return view('teach', compact('skills', 'sessionRequests', 'approvedSkills', 'rejectedSkills'));
+
+        return view('teach', compact('skills', 'sessionRequests', 'approvedSkills', 'rejectedSkills', 'requestedSkills'));
     }
 
     /**

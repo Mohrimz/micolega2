@@ -100,10 +100,7 @@
 <div class="mb-6">
    
     <!-- Other Skills Checkbox -->
-    <div class="flex items-center mb-4">
-        <input type="checkbox" id="other" name="other" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-        <label for="other" class="ml-2 text-gray-700">Other</label>
-    </div>
+    
 
     <!-- Existing Requested Skills -->
     <div id="requested-skills" class="space-y-4" style="display: none;">

@@ -99,6 +99,58 @@
                 </table>
             </div>
         </div>
+        <!-- Skills and Demand Section -->
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-8">
+    <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-6">Newly Requested Skills from Students - Be the First Person to Teach</h2>
+
+        <!-- Available Skills Table -->
+        <h3 class="text-lg font-medium mb-4">Available Skills</h3>
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 border-b font-medium text-left">Skill Name</th>
+                    <th class="py-3 px-4 border-b font-medium text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($requestedSkills as $skill)
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4 border-b">{{ $skill->name }}</td>
+                        <td class="py-3 px-4 border-b">
+                            <!-- Upload Proof Button -->
+                            <button 
+                                @click="showModal = true; selectedSkillId = {{ $skill->id }}" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                Teach
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Proof Upload -->
+<div x-show="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4">Upload Proof for Requested Skill</h2>
+        <form method="POST" action="{{ route('tutor.uploadProof') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-6">
+                <label for="proof" class="block text-sm font-medium text-gray-700">Upload Certificate</label>
+                <input type="file" name="proof" id="proof" class="block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            <input type="hidden" name="skill_id" :value="selectedSkillId">
+            <div class="flex justify-end space-x-3">
+                <button type="button" @click="showModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
         
 
         <!-- Modal for Proof Upload -->
