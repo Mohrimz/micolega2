@@ -37,7 +37,7 @@
         
         <!-- Group Sessions Link -->
         <x-nav-link href="{{ route('group-sessions') }}" :active="request()->routeIs('group-sessions')" class="text-white font-bold">
-            {{ __('Group Sessions') }}
+            {{ __('Webinars') }}
         </x-nav-link>
     @endif
 </div>

@@ -18,6 +18,8 @@ use App\Http\Controllers\StudentSessionController;
 use App\Http\Controllers\GroupCourseController;
 use App\Http\Controllers\SkillNameController;
 use App\Http\Controllers\SkillRequestController;
+use App\Http\Controllers\TutorController;
+
 
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -149,3 +151,5 @@ Route::post('/tutor/upload-proof', [SkillRequestController::class, 'uploadProof'
 Route::post('/admin/approve-skill/{id}', [SkillRequestController::class, 'approveSkill'])->name('admin.approveSkill');
 Route::post('/admin/reject-skill/{id}', [SkillRequestController::class, 'rejectSkill'])->name('admin.rejectSkill');
 Route::get('/admin/requested-skills', [SkillRequestController::class, 'adminSkills'])->name('admin.requestedSkills');
+
+Route::post('/request-group-session', [TutorController::class, 'requestGroupSession'])->name('tutors.requestGroupSession');

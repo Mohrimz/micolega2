@@ -2,7 +2,7 @@
     <div x-data="{ showModal: false }" class="min-h-screen bg-gray-100">
         <!-- Header Section with Title, Filter, and Button -->
         <div class="flex justify-between items-center px-6 py-4 bg-white shadow-md">
-            <h1 class="text-2xl font-bold text-gray-800">Group Sessions</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Every lesson shared is a step toward brighter futures!</h1>
             <div class="flex items-center space-x-4">
                 <!-- Filter Form -->
                 <form method="GET" action="{{ route('group-sessions') }}" class="flex space-x-4">
@@ -40,7 +40,7 @@
                 <button 
                     @click="showModal = true" 
                     class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                    Create Group Course
+                    Create Webinars
                 </button>
             </div>
         </div>
