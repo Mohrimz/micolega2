@@ -1,0 +1,19 @@
+# InfinityFree Deployment Guide
+# 100% Free - No Card Required
+
+# Step 1: Go to https://infinityfree.net
+# Step 2: Sign up (no card needed)
+# Step 3: Create new account
+# Step 4: Upload your Laravel files via File Manager
+
+# Required changes for InfinityFree:
+# 1. Change index.php location
+# 2. Update database config
+# 3. Set proper permissions
+
+# They provide:
+# - Free hosting
+# - MySQL database
+# - PHP 8.x support
+# - No ads
+# - 5GB storage

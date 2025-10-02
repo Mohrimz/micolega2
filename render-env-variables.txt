@@ -1,0 +1,30 @@
+# Copy these environment variables to Render:
+
+APP_NAME=MiColega
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:nc1rvpr0Qy1bQ07LjOjKmdMPJ3FJlO2nM9LIZ+wg3Oo=
+APP_TIMEZONE=UTC
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+
+# Database Configuration (Neon PostgreSQL)
+DB_CONNECTION=pgsql
+DB_HOST=ep-solitary-bush-ado718et-pooler.c-2.us-east-1.aws.neon.tech
+DB_PORT=5432
+DB_DATABASE=neondb
+DB_USERNAME=neondb_owner
+DB_PASSWORD=npg_eUlxp1fz3Hqc
+DB_SSLMODE=require
+
+# Session & Cache
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+CACHE_DRIVER=database
+QUEUE_CONNECTION=database
+
+# Other Settings
+BROADCAST_DRIVER=log
+FILESYSTEM_DISK=local
+MAIL_MAILER=log
+BCRYPT_ROUNDS=12

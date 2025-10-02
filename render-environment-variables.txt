@@ -1,0 +1,24 @@
+Add these Environment Variables one by one:
+
+1. APP_NAME = MiColega
+2. APP_ENV = production
+3. APP_DEBUG = false
+4. APP_KEY = base64:nc1rvpr0Qy1bQ07LjOjKmdMPJ3FJlO2nM9LIZ+wg3Oo=
+5. APP_TIMEZONE = UTC
+6. LOG_CHANNEL = stderr
+7. LOG_LEVEL = error
+8. DB_CONNECTION = pgsql
+9. DB_HOST = ep-solitary-bush-ado718et-pooler.c-2.us-east-1.aws.neon.tech
+10. DB_PORT = 5432
+11. DB_DATABASE = neondb
+12. DB_USERNAME = neondb_owner
+13. DB_PASSWORD = npg_eUlxp1fz3Hqc
+14. DB_SSLMODE = require
+15. SESSION_DRIVER = database
+16. SESSION_LIFETIME = 120
+17. CACHE_DRIVER = database
+18. QUEUE_CONNECTION = database
+19. BROADCAST_DRIVER = log
+20. FILESYSTEM_DISK = local
+21. MAIL_MAILER = log
+22. BCRYPT_ROUNDS = 12

@@ -1,0 +1,13 @@
+# If Docker is not available, use these settings:
+
+# Language: PHP
+# PHP Version: 8.2
+
+# Build Command:
+composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache
+
+# Start Command:
+php artisan serve --host=0.0.0.0 --port=$PORT
+
+# Publish Directory:
+public

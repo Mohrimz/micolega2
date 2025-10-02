@@ -1,0 +1,78 @@
+# Hostinger File Upload Guide
+
+## Step 1: Access File Manager in hPanel
+1. Login to hPanel
+2. Go to "File Manager"
+3. Navigate to your website's public_html folder
+
+## Step 2: Upload Public Assets
+From your Laravel project's PUBLIC folder, upload these to public_html/:
+
+✅ .htaccess (very important!)
+✅ favicon.ico
+✅ css/ (entire folder)
+✅ js/ (entire folder) 
+✅ Any images/ folder if exists
+
+## Step 3: Upload Modified Index File
+✅ Upload "index-hostinger.php" and rename it to "index.php"
+
+## Step 4: Create Laravel Folder
+1. In public_html/, create a new folder called "laravel"
+2. Inside public_html/laravel/, upload these folders:
+
+✅ app/
+✅ bootstrap/ 
+✅ config/
+✅ database/
+✅ resources/
+✅ routes/
+✅ storage/
+✅ vendor/ (if you have it locally)
+
+## Step 5: Upload Configuration Files
+Inside public_html/laravel/, upload:
+
+✅ composer.json
+✅ composer.lock  
+✅ artisan
+✅ .env.hostinger.production (rename to .env)
+
+## Step 6: Set Permissions
+In File Manager:
+1. Right-click on storage/ folder
+2. Change permissions to 755
+3. Right-click on bootstrap/cache/
+4. Change permissions to 755
+
+## Step 7: Install Dependencies (if vendor/ missing)
+If you don't have vendor/ folder:
+1. Go to "Terminal" in hPanel
+2. Navigate to your laravel folder: cd public_html/laravel
+3. Run: composer install --no-dev
+
+## Step 8: Run Migrations
+In Terminal:
+cd public_html/laravel
+php artisan migrate --force
+
+## Final Structure Should Look Like:
+public_html/
+├── index.php ✅
+├── .htaccess ✅
+├── css/ ✅
+├── js/ ✅
+├── favicon.ico ✅
+└── laravel/
+    ├── app/ ✅
+    ├── bootstrap/ ✅
+    ├── config/ ✅
+    ├── database/ ✅
+    ├── resources/ ✅
+    ├── routes/ ✅
+    ├── storage/ ✅
+    ├── vendor/ ✅
+    ├── .env ✅
+    ├── composer.json ✅
+    ├── composer.lock ✅
+    └── artisan ✅

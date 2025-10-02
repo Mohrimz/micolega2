@@ -1,0 +1,39 @@
+# Render Deployment Configuration
+services:
+  - type: web
+    name: micolega
+    runtime: docker
+    plan: free
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: ./render-start.sh
+    envVars:
+      - key: APP_NAME
+        value: MiColega
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: base64:nc1rvpr0Qy1bQ07LjOjKmdMPJ3FJlO2nM9LIZ+wg3Oo=
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: ep-solitary-bush-ado718et-pooler.c-2.us-east-1.aws.neon.tech
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: neondb
+      - key: DB_USERNAME
+        value: neondb_owner
+      - key: DB_PASSWORD
+        value: npg_eUlxp1fz3Hqc
+      - key: DB_SSLMODE
+        value: require
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database

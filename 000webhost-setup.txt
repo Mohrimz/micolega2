@@ -1,0 +1,22 @@
+# 000webhost Laravel Setup Instructions
+
+# 1. After signing up to 000webhost:
+#    - Create a new website
+#    - Note your website URL
+
+# 2. File Upload Process:
+#    - Go to File Manager
+#    - Upload ALL Laravel files to public_html/
+#    - Move contents of 'public' folder to public_html/
+#    - Move other Laravel folders (app, bootstrap, config, etc.) to a folder called 'laravel' in public_html/
+
+# 3. Update index.php:
+#    - Edit public_html/index.php
+#    - Change paths to point to laravel/ folder
+
+# 4. Database Setup:
+#    - Use your existing Neon PostgreSQL database
+#    - Or create MySQL database in 000webhost (free)
+
+# 5. Environment Configuration:
+#    - Create .env file with production settings

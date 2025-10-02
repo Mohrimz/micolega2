@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiColega - Loading...</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .loading {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading">MiColega is starting...</div>
+        <div class="spinner"></div>
+        <p>Laravel application is being set up.</p>
+    </div>
+
+    <script>
+        // This will be replaced with actual Laravel frontend
+        setTimeout(() => {
+            document.querySelector('.loading').textContent = 'Setting up database connection...';
+        }, 2000);
+        
+        setTimeout(() => {
+            document.querySelector('.loading').textContent = 'Almost ready...';
+        }, 4000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# 000webhost Deployment Guide
+# 100% Free - No Card Required
+
+# Step 1: Go to https://www.000webhost.com
+# Step 2: Sign up (no card needed)
+# Step 3: Create website
+# Step 4: Upload Laravel files
+
+# Features:
+# - 1GB disk space
+# - 10GB bandwidth
+# - PHP 8.x
+# - MySQL database
+# - No forced ads
+# - cPanel access

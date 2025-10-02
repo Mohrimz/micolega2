@@ -1,0 +1,48 @@
+# Hostinger Free Hosting Deployment Guide
+
+## Step 1: Sign Up
+- Go to: https://www.hostinger.com
+- Click "Free Hosting" or go to https://www.000webhost.com
+- Sign up (no card required for free plan)
+
+## Step 2: Create Website  
+- Choose "Upload your own website"
+- Website name: micolega (or your choice)
+- Domain will be: micolega.000webhostapp.com
+
+## Step 3: File Manager Access
+- Go to your Hostinger dashboard
+- Click "File Manager" 
+- You'll see public_html folder
+
+## Step 4: Upload Structure
+Upload files in this structure:
+```
+public_html/
+├── index.php (use index-hostinger.php)
+├── .htaccess (copy from public/.htaccess)
+├── css/ (copy from public/css)
+├── js/ (copy from public/js)
+├── images/ (copy from public/images)
+└── laravel/
+    ├── app/
+    ├── bootstrap/
+    ├── config/
+    ├── database/
+    ├── resources/
+    ├── routes/
+    ├── storage/
+    ├── vendor/
+    ├── .env
+    ├── composer.json
+    └── artisan
+```
+
+## Features Available:
+- ✅ PHP 8.x support
+- ✅ MySQL database (free)
+- ✅ 1GB storage
+- ✅ 10GB bandwidth
+- ✅ No forced ads
+- ✅ SSL certificate
+- ✅ cPanel access
