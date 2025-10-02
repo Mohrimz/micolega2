@@ -47,8 +47,12 @@ RUN mkdir -p storage/logs storage/framework/sessions storage/framework/views sto
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Copy and set permissions for startup script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 # Expose port 80
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Start with our custom script
+CMD ["/usr/local/bin/start.sh"]
